@@ -1522,6 +1522,8 @@ const PrintSparseTable = function (batterInfo, formattingOptions) {
 	
 };
 
+//
+
 //let sparseTable = PrintSparseTable(batterInfoByInning);
 //printDivHTML("sparsetable1",sparseTable);
 //-----------Sparse Table Output -------- END
