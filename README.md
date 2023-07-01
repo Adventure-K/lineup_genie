@@ -1,4 +1,4 @@
 # lineup_genie
 Softball lineup generator
 
-*Most of the JS by Eric Lanser*
+The purpose of this project is to add formatting and browser interactivity to a JavaScript program designed to generate lineups for softball games written by Eric Lanser.
