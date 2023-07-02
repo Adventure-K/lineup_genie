@@ -1,26 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lineup Genie</title>
+    <style>
+        table,
+        th,
+        td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+
+        th {
+            font-weight:bold;
+        }
+    </style>
 </head>
+
 <body>
     <h1>Manage Team</h1>
     <hr>
-    <table>
-        <thead>
-            <tr>
-                <th>Players</th>
-                <th>Primary Position</th>
-                <th>Edit</th>
-                <th>Reorder</th>
-            </tr>
-        </thead>
-        <div id="managePlayersDiv">
-            
-        </div>
-    </table>
-    <script src="SLM_v2_2.js"></script>
+    <br>
+    <div id="managePlayersDiv"></div>
+    <button id="generateLineup">Generate Lineup</button>
+
+    <script src="manage.js"></script>
 </body>
+
 </html>
