@@ -33,35 +33,8 @@ const steveIsTheBestManager = true;
 const chalmersDoesHisBitTooWhenNeeded = true;
 const daveIsCousin = true;
 
-/* ----------------  Make a Roster ----START----------------------*/
+import { roster } from './teamData.js';
 
-//Overall Team Roster. The list of (pre-defined) people Steve can choose from. If we want to add people (permanently or on the fly, need to update this roster variable.) 
-let roster = [];
-
-const addToRoster = function (alias, pos, fname, lname, pos2, pos3, sortOrderClass) {
-	//alias: name displayed on print outs
-	//pos: main position suggested as default
-	//fname: first name
-	//lname: last name
-	//pos2/3: other suggested positions
-	//sortOrderClass: 1,2,...,N -- 1 will be at the top of the select list. Can use this so current roster is at top of pick-list and rare people are at the bottom.
-	let rosterMember = { "alias": alias, "pos": pos, "fname": fname, "lname": lname, "pos2": pos2, "pos3": pos3, "sortOrderClass": sortOrderClass };
-	roster.push(rosterMember);
-};
-
-//working from existing list...
-//a hacky way to update the roster is just to add to this JSON object.
-const roster_20230501 = [{ alias: 'Chalmers', pos: 'Util', fname: 'Nick', lname: 'Chalmers', pos2: '1B', pos3: 'SS', sortOrderClass: '1' }, { alias: 'Burman', pos: '1B', fname: 'Adam', lname: 'Burman', pos2: 'RF', pos3: 'RCF', sortOrderClass: '1' }, { alias: 'Waddick', pos: '1B', fname: 'Brian', lname: 'Waddick', pos2: 'Util', pos3: 'RF', sortOrderClass: '1' }, { alias: 'Oppegaard', pos: '3B', fname: 'Dave', lname: 'Oppegaard', pos2: '', pos3: '', sortOrderClass: '1' }, { alias: 'Schaefer', pos: 'LCF', fname: 'Cole', lname: 'Schaefer', pos2: 'LF', pos3: 'RCF', sortOrderClass: '1' }, { alias: 'May', pos: 'LF', fname: 'Chris', lname: 'May', pos2: 'LCF', pos3: 'RCF', sortOrderClass: '1' }, { alias: 'Welter', pos: 'RF', fname: 'Andrew', lname: 'Welter', pos2: '', pos3: '', sortOrderClass: '1' }, { alias: 'Bieganek', pos: 'SS', fname: 'Aric', lname: 'Bieganek', pos2: '', pos3: '', sortOrderClass: '1' }, { alias: 'DeCausmeaker', pos: 'Util', fname: 'John', lname: 'DeCausmeaker', pos2: 'P', pos3: 'SS', sortOrderClass: '1' }, { alias: 'Norman', pos: 'LF', fname: 'Steve', lname: 'Norman', pos2: 'LCF', pos3: 'RCF', sortOrderClass: '1' }, { alias: 'Lanser', pos: 'RCF', fname: 'Eric', lname: 'Lanser', pos2: 'LCF', pos3: 'RF', sortOrderClass: '1' }, { alias: 'Travis', pos: '2B', fname: 'Lloyd', lname: 'Travis', pos2: '', pos3: '', sortOrderClass: '1' }, { alias: 'Mensink', pos: 'P', fname: 'Mike', lname: 'Mensink', pos2: '', pos3: '', sortOrderClass: '1' }];
-
-//add each person to the roster.
-for (let i = 0; i < roster_20230501.length; i++) {
-	addToRoster(roster_20230501[i].alias, roster_20230501[i].pos, roster_20230501[i].fname, roster_20230501[i].lname, roster_20230501[i].pos2, roster_20230501[i].pos3, roster_20230501[i].sortOrderClass);
-}
-
-//maybe sort roster for the pick-list. (sort on sortOrderClass then...alphabetical by name, or maybe by primary pos, or just the order they're already in...or random or whatever )
-
-
-/* ---------------- Make a Roster ----END----------------------*/
 /* ----------------  Determine Attendance. Assign Batting Order. Assign Role (Primary Position). ----START----------------------*/
 //some basic info:
 
@@ -113,8 +86,8 @@ let players = []; //list of player aliases
 
 //example player list: grab from 20230501 roster info (this was 5/1's attendees...in their batting order).
 //Front-end Dev note: you need to replace this with with another method for assigning attendees--namely, letting Steve choose it in the UI!
-for (let i = 0; i < roster_20230501.length; i++) {
-	players.push(roster_20230501[i].alias);
+for (let i = 0; i < roster.length; i++) {
+	players.push(roster[i].alias);
 }
 //end example set player list
 
@@ -1061,7 +1034,7 @@ let fillPositions = function (inning, rounds, scale) { //modify global variables
 	//score each combination. without (esimatedSkill) and with (noisySkill) noise.
 	let comboScores = [];
 	for (let i = 0; i < someCombos.length; i++) {
-		thisCombo = {};
+		let thisCombo = {};
 		thisCombo.index = i;
 		thisCombo.score = 0;
 		thisCombo.noisyScore = 0;
@@ -1177,7 +1150,7 @@ let makeNoisySkill = function (skill, rounds, scale) {
 	//skill = estimated player skill from playerSkill
 	//rounds = # of rounds of randomness added
 	//scale = how much 'skill' is added on winning roles
-	noisySkill = skill;	//start as skill
+	let noisySkill = skill;	//start as skill
 	//generate noise N times
 	for (let n = 0; n < rounds; n++) {
 		noisySkill = noisySkill + getRandomIntInclusive(0, 1) * scale;
