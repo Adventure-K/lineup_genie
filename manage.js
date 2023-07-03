@@ -85,14 +85,13 @@ for (let key in roles) {
         pposSelect.appendChild(pposOption);
     }
 }
-    console.log('add dd loop', p)
     const pposSelectId = 'pposSelect_' + counter; // make unique ID for each dropdown. Probably will need?
     pposSelect.id = pposSelectId;
-    console.log('this dd id: ', pposSelect.id);
     const targetElement = document.getElementById("pposSelectCell" + p);
     targetElement.appendChild(pposSelect); // Insert dropdown into correct cell
     for (let key in roles) {
-        if (key.toString === roster[p].pos) {
+        console.log('pos of p: ', roster[p].pos)
+        if (key === roster[p].pos) {
             pposSelect.value = roster[p].pos; // Set default value of position dropdown to player's main position in roster object		
         }    
     }
