@@ -6,7 +6,7 @@ export let roster = [];
 
 const addToRoster = function (alias, pos, fname, lname, pos2, pos3, sortOrderClass) {
     //alias: name displayed on print outs
-    //pos: main position suggested as default
+    //pos: main position suggested as default. Valid values are the keys of roles object, below
     //fname: first name
     //lname: last name
     //pos2/3: other suggested positions
@@ -17,7 +17,21 @@ const addToRoster = function (alias, pos, fname, lname, pos2, pos3, sortOrderCla
 
 //working from existing list...
 //a hacky way to update the roster is just to add to this JSON object.
-const roster_20230501 = [{ alias: 'Chalmers', pos: 'Util', fname: 'Nick', lname: 'Chalmers', pos2: '1B', pos3: 'SS', sortOrderClass: '1' }, { alias: 'Burman', pos: '1B', fname: 'Adam', lname: 'Burman', pos2: 'RF', pos3: 'RCF', sortOrderClass: '1' }, { alias: 'Waddick', pos: '1B', fname: 'Brian', lname: 'Waddick', pos2: 'Util', pos3: 'RF', sortOrderClass: '1' }, { alias: 'Oppegaard', pos: '3B', fname: 'Dave', lname: 'Oppegaard', pos2: '', pos3: '', sortOrderClass: '1' }, { alias: 'Schaefer', pos: 'LCF', fname: 'Cole', lname: 'Schaefer', pos2: 'LF', pos3: 'RCF', sortOrderClass: '1' }, { alias: 'May', pos: 'LF', fname: 'Chris', lname: 'May', pos2: 'LCF', pos3: 'RCF', sortOrderClass: '1' }, { alias: 'Welter', pos: 'RF', fname: 'Andrew', lname: 'Welter', pos2: '', pos3: '', sortOrderClass: '1' }, { alias: 'Bieganek', pos: 'SS', fname: 'Aric', lname: 'Bieganek', pos2: '', pos3: '', sortOrderClass: '1' }, { alias: 'DeCausmeaker', pos: 'Util', fname: 'John', lname: 'DeCausmeaker', pos2: 'P', pos3: 'SS', sortOrderClass: '1' }, { alias: 'Norman', pos: 'LF', fname: 'Steve', lname: 'Norman', pos2: 'LCF', pos3: 'RCF', sortOrderClass: '1' }, { alias: 'Lanser', pos: 'RCF', fname: 'Eric', lname: 'Lanser', pos2: 'LCF', pos3: 'RF', sortOrderClass: '1' }, { alias: 'Travis', pos: '2B', fname: 'Lloyd', lname: 'Travis', pos2: '', pos3: '', sortOrderClass: '1' }, { alias: 'Mensink', pos: 'P', fname: 'Mike', lname: 'Mensink', pos2: '', pos3: '', sortOrderClass: '1' }];
+const roster_20230501 = [
+    { alias: 'Chalmers', pos: 'Util', fname: 'Nick', lname: 'Chalmers', pos2: '1B', pos3: 'SS', sortOrderClass: '1' }, 
+    { alias: 'Burman', pos: '1B', fname: 'Adam', lname: 'Burman', pos2: 'RF', pos3: 'RCF', sortOrderClass: '1' }, 
+    { alias: 'Waddick', pos: '1B', fname: 'Brian', lname: 'Waddick', pos2: 'Util', pos3: 'RF', sortOrderClass: '1' }, 
+    { alias: 'Oppegaard', pos: '3B', fname: 'Dave', lname: 'Oppegaard', pos2: '', pos3: '', sortOrderClass: '1' }, 
+    { alias: 'Schaefer', pos: 'LCF', fname: 'Cole', lname: 'Schaefer', pos2: 'LF', pos3: 'RCF', sortOrderClass: '1' }, 
+    { alias: 'May', pos: 'LF', fname: 'Chris', lname: 'May', pos2: 'LCF', pos3: 'RCF', sortOrderClass: '1' }, 
+    { alias: 'Welter', pos: 'RF', fname: 'Andrew', lname: 'Welter', pos2: '', pos3: '', sortOrderClass: '1' }, 
+    { alias: 'Bieganek', pos: 'SS', fname: 'Aric', lname: 'Bieganek', pos2: '', pos3: '', sortOrderClass: '1' }, 
+    { alias: 'DeCausmeaker', pos: 'Util', fname: 'John', lname: 'DeCausmeaker', pos2: 'P', pos3: 'SS', sortOrderClass: '1' }, 
+    { alias: 'Norman', pos: 'LF', fname: 'Steve', lname: 'Norman', pos2: 'LCF', pos3: 'RCF', sortOrderClass: '1' }, 
+    { alias: 'Lanser', pos: 'RCF', fname: 'Eric', lname: 'Lanser', pos2: 'LCF', pos3: 'RF', sortOrderClass: '1' }, 
+    { alias: 'Travis', pos: '2B', fname: 'Lloyd', lname: 'Travis', pos2: '', pos3: '', sortOrderClass: '1' }, 
+    { alias: 'Mensink', pos: 'P', fname: 'Mike', lname: 'Mensink', pos2: '', pos3: '', sortOrderClass: '1' }
+];
 
 //add each person to the roster.
 for (let i = 0; i < roster_20230501.length; i++) {

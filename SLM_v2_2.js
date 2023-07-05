@@ -1483,25 +1483,15 @@ const PrintSparseTable = function (batterInfo, formattingOptions) {
 			}
 			//end row
 			sparseTableHTML = sparseTableHTML + "</tr>";
-
 		}
 	}
-	
+	//done
+	return sparseTableHTML + "</table>";
 
-		//done
-
-
-		return sparseTableHTML + "</table>";
-	
 };
-
-//
-
 //let sparseTable = PrintSparseTable(batterInfoByInning);
 //printDivHTML("sparsetable1",sparseTable);
 //-----------Sparse Table Output -------- END
-
-
 let batterInfos = [];
 batterInfos[0] = MakeBatterInfoByInning(top3[0], battingOrder);
 batterInfos[1] = MakeBatterInfoByInning(top3[1], battingOrder);
