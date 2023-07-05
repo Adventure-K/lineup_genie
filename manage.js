@@ -1,5 +1,7 @@
 import { roster } from './teamData.js';
 import { roles } from './teamData.js';
+import { playerSkill } from './teamData.js';
+
 const defaultRoster = roster;
 
 //-----------Populate Team Management Form----START----//

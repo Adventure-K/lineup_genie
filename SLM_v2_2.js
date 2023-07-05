@@ -34,6 +34,7 @@ const chalmersDoesHisBitTooWhenNeeded = true;
 const daveIsCousin = true;
 
 import { roster } from './teamData.js';
+import { playerSkill } from './teamData.js';
 
 /* ----------------  Determine Attendance. Assign Batting Order. Assign Role (Primary Position). ----START----------------------*/
 //some basic info:
@@ -190,28 +191,6 @@ let positionImportance = {
 	, 'RCF': 70
 	, 'RF': 10
 };
-
-//PlayerSkill. 0=incapable. 100 highest by convention. 
-//Another note on the scale: This will be randomized on the order of 0 to +20 points, (2 binary rolls of 0|5), so centered on +5). So ~ 5% of highest assignable skill by convention.
-let playerSkill = {
-	'Chalmers': { 'P': 70, 'C': 70, '1B': 80, '2B': 80, '3B': 80, 'SS': 80, 'LF': 85, 'LCF': 85, 'RCF': 85, 'RF': 85 }
-	, 'Burman': { 'P': 1, 'C': 70, '1B': 80, '2B': 50, '3B': 50, 'SS': 50, 'LF': 50, 'LCF': 50, 'RCF': 50, 'RF': 50 }
-	, 'Waddick': { 'P': 1, 'C': 70, '1B': 70, '2B': 70, '3B': 40, 'SS': 40, 'LF': 70, 'LCF': 70, 'RCF': 70, 'RF': 70 }
-	, 'Oppegaard': { 'P': 20, 'C': 70, '1B': 40, '2B': 60, '3B': 80, 'SS': 60, 'LF': 20, 'LCF': 20, 'RCF': 20, 'RF': 20 }
-	, 'Schaefer': { 'P': 1, 'C': 70, '1B': 50, '2B': 85, '3B': 60, 'SS': 60, 'LF': 95, 'LCF': 95, 'RCF': 95, 'RF': 95 }
-	, 'May': { 'P': 1, 'C': 70, '1B': 50, '2B': 60, '3B': 60, 'SS': 60, 'LF': 100, 'LCF': 100, 'RCF': 100, 'RF': 100 }
-	, 'Welter': { 'P': 1, 'C': 70, '1B': 50, '2B': 60, '3B': 20, 'SS': 10, 'LF': 60, 'LCF': 60, 'RCF': 70, 'RF': 75 }
-	, 'Bieganek': { 'P': 60, 'C': 70, '1B': 70, '2B': 90, '3B': 90, 'SS': 90, 'LF': 70, 'LCF': 70, 'RCF': 70, 'RF': 70 }
-	, 'DeCausmeaker': { 'P': 80, 'C': 70, '1B': 75, '2B': 75, '3B': 75, 'SS': 75, 'LF': 75, 'LCF': 75, 'RCF': 75, 'RF': 75 }
-	, 'Norman': { 'P': 70, 'C': 70, '1B': 30, '2B': 70, '3B': 70, 'SS': 70, 'LF': 99, 'LCF': 99, 'RCF': 99, 'RF': 99 }
-	, 'Lanser': { 'P': 50, 'C': 70, '1B': 50, '2B': 60, '3B': 40, 'SS': 60, 'LF': 85, 'LCF': 85, 'RCF': 85, 'RF': 85 }
-	, 'Travis': { 'P': 1, 'C': 70, '1B': 10, '2B': 70, '3B': 20, 'SS': 50, 'LF': 40, 'LCF': 40, 'RCF': 40, 'RF': 50 }
-	, 'Mensink': { 'P': 100, 'C': 60, '1B': 40, '2B': 1, '3B': 1, 'SS': 1, 'LF': 1, 'LCF': 1, 'RCF': 1, 'RF': 1 }
-
-};
-
-
-
 
 //check player role validity
 //each player is assigned. total length of this array matches numPlayers
