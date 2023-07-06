@@ -4,7 +4,9 @@ import { playerSkill } from './teamData.js';
 
 const defaultRoster = roster;
 const rc = JSON.parse(localStorage.getItem('roster'));
-window.rc = rc; // This line is required to access a value in the console from a script loaded as a module
+const sc = JSON.parse(localStorage.getItem('playerSkill'));
+window.rc = rc; // This line is required to access a value in the console from a module
+window.sc = sc;
 
 //-----------Populate Team Management Table----START----//
 const populateManagementTable = function (mRoster) {
@@ -17,18 +19,24 @@ const populateManagementTable = function (mRoster) {
     for (let p = 0; p < mRoster.length; p++) { // For each player on roster:
         let lineupOrder = p + 1; // Number by batting order
         let last = mRoster[p].lName.toString().toUpperCase();
-        managementTable += "<tr><td>" + lineupOrder + "</td>"; // new row, first cell is order #
+        managementTable += "<tr><td class='centerTD'>" + lineupOrder + "</td>"; // new row, first cell is order #
         managementTable += "<td>" + last + ", " + mRoster[p].fName + "</td>"; // This cell is name LAST, First
-        managementTable += "<td id='pos1SelectCell" + p + "'></td>"; // This cell holds main position select
-        managementTable += "<td><span id='editButton" + p + "' class='editButton'>📝</span></td>"; // This cell holds an edit player button
-        managementTable += "<td id='reorderHandle" + p + "'>☰</td>" // This cell holds a handle to reorder with click and drag
+        managementTable += "<td class='centerTD' id='pos1SelectCell" + p + "'></td>"; // This cell holds main position select
+        managementTable += "<td class='centerTD'><span id='editButton" + p + "' class='editButton'>📝</span></td>"; // This cell holds an edit player button
+        managementTable += "<td class='centerTD' id='reorderHandle" + p + "'>☰</td>" // This cell holds a handle to reorder with click and drag
         managementTable += "</tr>"; // end row
-
-        document.getElementById('editButton' + p).addEventListener('click', editPlayer(p))
     }
     managementTable += "</table>"
     return managementTable;
 }
+
+function addEditListeners() { // Add click listeners to make the edit buttons work
+    for (let p = 0; p < rc.length; p++) {
+        document.getElementById('editButton' + p).addEventListener('click', function () {
+            editPlayer(p); // This is wrapped in another, anonymous function because when you tried to pass it as an argument with its own parameters it broke the hell out of everything
+        })
+    }
+};
 //-----------Populate Team Management Table----END----//
 
 //-----------Add Position Selectors-------START----//
@@ -65,13 +73,14 @@ const addPositionSelectors = function () {
 
 //-----------Edit Player------START-----------------//
 const editPlayer = function (player) {
-    const editPlayerModal = document.getElementById('modal');
+    const editPlayerModal = document.getElementById('modalContainer');
+    editPlayerModal.innerHTML += '<div id="myModal" class="modal">'
     editPlayerModal.innerHTML += '<div class="modal-content">'
     editPlayerModal.innerHTML += '<span class="closeBtn">&times;</span>'
     editPlayerModal.innerHTML += '<h2>Edit Player</h2>'
     editPlayerModal.innerHTML += '<input type="text" id="fName" placeholder=' + roster[player].fName + '>'
     editPlayerModal.innerHTML += '<input type="text" id="lName" placeholder=' + roster[player].lName + '>'
-    editPlayerModal.innerHTML +=
+    editPlayerModal.innerHTML += // Figure out how to do skill sliders;
         editPlayerModal.innerHTML += '</div>'
 }
 
@@ -80,7 +89,8 @@ const editPlayer = function (player) {
 //-----------Add Player------START-----------------//
 const addPlayerBtn = document.getElementById('addPlayerBtn');
 addPlayerBtn.addEventListener('click', function () {
-    const addPlayerModal = document.getElementById('modal')
+    const addPlayerModal = document.getElementById('modalContainer')
+    addPlayerModal.innerHTML += '<div id="myModal" class="modal">'
     addPlayerModal.innerHTML += '<div class="modal-content">'
     addPlayerModal.innerHTML += '<span class="closeBtn">&times;</span>'
     addPlayerModal.innerHTML += '<h2>Add Player</h2>'
@@ -107,9 +117,12 @@ const loadTable = function () {
         let managementTableDOM = populateManagementTable(loadedData);
         mgmtTableToHTML("managePlayersDiv", managementTableDOM);
         addPositionSelectors();
+        addEditListeners();
     }
 };
 document.addEventListener('DOMContentLoaded', loadTable());
+
+
 //-----------Print Team Management Form----END----//
 
 //-----------Invoke Default Data----START----//
