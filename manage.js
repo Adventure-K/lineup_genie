@@ -3,9 +3,11 @@ import { roles } from './teamData.js';
 import { playerSkill } from './teamData.js';
 
 const defaultRoster = roster;
+const rc = JSON.parse(localStorage.getItem('roster'));
+window.rc = rc; // This line is required to access a value in the console from a script loaded as a module
 
-//-----------Populate Team Management Form----START----//
-const printManagementTable = function (mRoster) {
+//-----------Populate Team Management Table----START----//
+const populateManagementTable = function (mRoster) {
     let managementTable = "<table>";
 
     // Headers
@@ -14,50 +16,84 @@ const printManagementTable = function (mRoster) {
     // Data
     for (let p = 0; p < mRoster.length; p++) { // For each player on roster:
         let lineupOrder = p + 1; // Number by batting order
-        let last = mRoster[p].lname.toString().toUpperCase();
+        let last = mRoster[p].lName.toString().toUpperCase();
         managementTable += "<tr><td>" + lineupOrder + "</td>"; // new row, first cell is order #
-        managementTable += "<td>" + last + ", " + mRoster[p].fname + "</td>"; // This cell is name LAST, First
-        managementTable += "<td id='pposSelectCell" + p + "'></td>"; // This cell will hold position select
-        managementTable += "<td id='editButton" + p + "'>📝</td>"; // This cell holds an edit player button
+        managementTable += "<td>" + last + ", " + mRoster[p].fName + "</td>"; // This cell is name LAST, First
+        managementTable += "<td id='pos1SelectCell" + p + "'></td>"; // This cell holds main position select
+        managementTable += "<td><span id='editButton" + p + "' class='editButton'>📝</span></td>"; // This cell holds an edit player button
         managementTable += "<td id='reorderHandle" + p + "'>☰</td>" // This cell holds a handle to reorder with click and drag
         managementTable += "</tr>"; // end row
+
+        document.getElementById('editButton' + p).addEventListener('click', editPlayer(p))
     }
     managementTable += "</table>"
     return managementTable;
 }
-//-----------Populate Team Management Form----END----//
+//-----------Populate Team Management Table----END----//
 
 //-----------Add Position Selectors-------START----//
 const addPositionSelectors = function () {
     let counter = 0;
     for (let p = 0; p < roster.length; p++) {
-        const pposSelect = document.createElement('select'); // Generate dropdowns for position column
+        const pos1Select = document.createElement('select'); // Generate dropdowns for position column
 
         for (let key in roles) {
             if (roles.hasOwnProperty(key)) { // Populate dropdown with keys of "roles" object
-                const pposOption = document.createElement('option');
-                pposOption.value = key;
-                pposOption.textContent = key;
-                pposSelect.appendChild(pposOption);
+                const pos1Option = document.createElement('option');
+                pos1Option.value = key;
+                pos1Option.textContent = key;
+                pos1Select.appendChild(pos1Option);
             }
         }
         const inactive = document.createElement('option'); // Include inactive option
         inactive.value = inactive.textContent = 'Inactive';
-        pposSelect.appendChild(inactive);
+        pos1Select.appendChild(inactive);
 
-        const pposSelectId = 'pposSelect_' + counter; // make unique ID for each dropdown. Probably will need?
-        pposSelect.id = pposSelectId;
-        const targetElement = document.getElementById("pposSelectCell" + p);
-        targetElement.appendChild(pposSelect); // Insert dropdown into correct cell
+        const pos1SelectId = 'pos1Select_' + counter; // make unique ID for each dropdown. Probably will need?
+        pos1Select.id = pos1SelectId;
+        const targetElement = document.getElementById("pos1SelectCell" + p);
+        targetElement.appendChild(pos1Select); // Insert dropdown into correct cell
         for (let key in roles) {
             if (key === roster[p].pos) {
-                pposSelect.value = roster[p].pos; // Set default value of position dropdown to player's main position in roster object		
+                pos1Select.value = roster[p].pos; // Set default value of position dropdown to player's main position in roster object		
             }
         }
         counter++;
     }
 };
 //-----------Add Position Selectors-------END------//
+
+//-----------Edit Player------START-----------------//
+const editPlayer = function (player) {
+    const editPlayerModal = document.getElementById('modal');
+    editPlayerModal.innerHTML += '<div class="modal-content">'
+    editPlayerModal.innerHTML += '<span class="closeBtn">&times;</span>'
+    editPlayerModal.innerHTML += '<h2>Edit Player</h2>'
+    editPlayerModal.innerHTML += '<input type="text" id="fName" placeholder=' + roster[player].fName + '>'
+    editPlayerModal.innerHTML += '<input type="text" id="lName" placeholder=' + roster[player].lName + '>'
+    editPlayerModal.innerHTML +=
+        editPlayerModal.innerHTML += '</div>'
+}
+
+//-----------Edit Player------END-----------------//
+
+//-----------Add Player------START-----------------//
+const addPlayerBtn = document.getElementById('addPlayerBtn');
+addPlayerBtn.addEventListener('click', function () {
+    const addPlayerModal = document.getElementById('modal')
+    addPlayerModal.innerHTML += '<div class="modal-content">'
+    addPlayerModal.innerHTML += '<span class="closeBtn">&times;</span>'
+    addPlayerModal.innerHTML += '<h2>Add Player</h2>'
+
+    addPlayerModal.innerHTML += '</div>'
+
+    const closeBtn = document.getElementByClassName('closeBtn');
+    closeBtn.addEventListener('click', function () {
+        addPlayerModal.innerHTML = '';
+    })
+})
+//-----------Add Player------END-----------------//
+
 
 //-----------Print Team Management Form----START----//
 const mgmtTableToHTML = function (divId, content) {
@@ -66,9 +102,9 @@ const mgmtTableToHTML = function (divId, content) {
 const loadTable = function () {
     let loadedData = JSON.parse(localStorage.getItem('roster'));
     if (loadedData === null) {
-        mgmtTableToHTML("managePlayersDiv", "*** Add Player or Load Default Team Data. ***");
+        mgmtTableToHTML("managePlayersDiv", "*** No player data found.  Add Player or Load Default Team Data. ***");
     } else {
-        let managementTableDOM = printManagementTable(loadedData);
+        let managementTableDOM = populateManagementTable(loadedData);
         mgmtTableToHTML("managePlayersDiv", managementTableDOM);
         addPositionSelectors();
     }
