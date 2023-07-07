@@ -13,7 +13,7 @@ const populateManagementTable = function (mRoster) {
     let managementTable = "<table>";
 
     // Headers
-    managementTable += "<tr><th>#</th><th>Player</th><th>Current Pos</th><th>Edit</th><th>Reorder</th></tr>";
+    managementTable += "<tr><th>#</th><th>Player</th><th>Pos 1</th><th>Pos 2</th><th>Pos 3</th><th>Edit</th><th>Reorder</th></tr>";
 
     // Data
     for (let p = 0; p < mRoster.length; p++) { // For each player on roster:
@@ -22,6 +22,8 @@ const populateManagementTable = function (mRoster) {
         managementTable += "<tr><td class='centerTD'>" + lineupOrder + "</td>"; // new row, first cell is order #
         managementTable += "<td>" + last + ", " + mRoster[p].fName + "</td>"; // This cell is name LAST, First
         managementTable += "<td class='centerTD' id='pos1SelectCell" + p + "'></td>"; // This cell holds main position select
+        managementTable += "<td class='centerTD' id='pos2SelectCell" + p + "'></td>"; // This cell holds 2nd position select
+        managementTable += "<td class='centerTD' id='pos3SelectCell" + p + "'></td>"; // This cell holds 3rd position select
         managementTable += "<td class='centerTD'><span id='editButton" + p + "' class='editButton'>📝</span></td>"; // This cell holds an edit player button
         managementTable += "<td class='centerTD' id='reorderHandle" + p + "'>☰</td>" // This cell holds a handle to reorder with click and drag
         managementTable += "</tr>"; // end row
@@ -41,30 +43,63 @@ function addEditListeners() { // Add click listeners to make the edit buttons wo
 
 //-----------Add Position Selectors-------START----//
 const addPositionSelectors = function () {
-    let counter = 0;
-    for (let p = 0; p < roster.length; p++) {
-        const pos1Select = document.createElement('select'); // Generate dropdowns for position column
+    let counter = 0; // Used to generate unique element IDs
+    for (let p = 0; p < roster.length; p++) { // Loop of Players (Table rows)
+        const pos1Select = document.createElement('select'); // Generate dropdowns
+        const pos2Select = document.createElement('select'); 
+        const pos3Select = document.createElement('select'); 
 
-        for (let key in roles) {
-            if (roles.hasOwnProperty(key)) { // Populate dropdown with keys of "roles" object
+        const pos2Null = document.createElement('option'); // Create blank options for pos 2 and 3
+        pos2Null.value = '';
+        pos2Null.textContent = '- none -';
+        pos2Select.appendChild(pos2Null);
+        const pos3Null = document.createElement('option');
+        pos3Null.value = '';
+        pos3Null.textContent = '- none -';
+        pos3Select.appendChild(pos3Null);
+
+        for (let key in roles) { // Loop of Roles
+            if (roles.hasOwnProperty(key)) { // Populate dropdowns with keys of "roles" object
                 const pos1Option = document.createElement('option');
                 pos1Option.value = key;
                 pos1Option.textContent = key;
                 pos1Select.appendChild(pos1Option);
+
+                const pos2Option = document.createElement('option');
+                pos2Option.value = key;
+                pos2Option.textContent = key;
+                pos2Select.appendChild(pos2Option);
+
+                const pos3Option = document.createElement('option');
+                pos3Option.value = key;
+                pos3Option.textContent = key;
+                pos3Select.appendChild(pos3Option);
             }
         }
-        const inactive = document.createElement('option'); // Include inactive option
-        inactive.value = inactive.textContent = 'Inactive';
+
+        const inactive = document.createElement('option'); // Include inactive option in pos 1 selector
+        inactive.value = 'Inactive';
+        inactive.textContent = 'Inactive';
         pos1Select.appendChild(inactive);
 
-        const pos1SelectId = 'pos1Select_' + counter; // make unique ID for each dropdown. Probably will need?
+        const pos1SelectId = 'pos1Select_' + counter; // make unique ID for each dropdown
+        const pos2SelectId = 'pos2Select_' + counter; 
+        const pos3SelectId = 'pos3Select_' + counter; 
         pos1Select.id = pos1SelectId;
-        const targetElement = document.getElementById("pos1SelectCell" + p);
-        targetElement.appendChild(pos1Select); // Insert dropdown into correct cell
-        for (let key in roles) {
-            if (key === roster[p].pos) {
-                pos1Select.value = roster[p].pos; // Set default value of position dropdown to player's main position in roster object		
-            }
+        pos2Select.id = pos2SelectId;
+        pos3Select.id = pos3SelectId;
+
+        const targetElement1 = document.getElementById("pos1SelectCell" + p); // Insert dropdowns into correct cells
+        targetElement1.appendChild(pos1Select); 
+        const targetElement2 = document.getElementById("pos2SelectCell" + p);
+        targetElement2.appendChild(pos2Select); 
+        const targetElement3 = document.getElementById("pos3SelectCell" + p);
+        targetElement3.appendChild(pos3Select); 
+
+        for (let key in roles) { // Set correct default selections per roster object
+            if (key === roster[p].pos) pos1Select.value = roster[p].pos;
+            if (key === roster[p].pos2) pos2Select.value = roster[p].pos2; 
+            if (key === roster[p].pos3) pos3Select.value = roster[p].pos3; 
         }
         counter++;
     }
@@ -94,7 +129,7 @@ addPlayerBtn.addEventListener('click', function () {
     addPlayerModal.innerHTML += '<div class="modal-content">'
     addPlayerModal.innerHTML += '<span class="closeBtn">&times;</span>'
     addPlayerModal.innerHTML += '<h2>Add Player</h2>'
-
+    // WIP
     addPlayerModal.innerHTML += '</div>'
 
     const closeBtn = document.getElementByClassName('closeBtn');
@@ -121,8 +156,6 @@ const loadTable = function () {
     }
 };
 document.addEventListener('DOMContentLoaded', loadTable());
-
-
 //-----------Print Team Management Form----END----//
 
 //-----------Invoke Default Data----START----//
