@@ -33,35 +33,9 @@ const steveIsTheBestManager = true;
 const chalmersDoesHisBitTooWhenNeeded = true;
 const daveIsCousin = true;
 
-/* ----------------  Make a Roster ----START----------------------*/
+import { roster } from './teamData.js';
+import { playerSkill } from './teamData.js';
 
-//Overall Team Roster. The list of (pre-defined) people Steve can choose from. If we want to add people (permanently or on the fly, need to update this roster variable.) 
-let roster = [];
-
-const addToRoster = function (alias, pos, fname, lname, pos2, pos3, sortOrderClass) {
-	//alias: name displayed on print outs
-	//pos: main position suggested as default
-	//fname: first name
-	//lname: last name
-	//pos2/3: other suggested positions
-	//sortOrderClass: 1,2,...,N -- 1 will be at the top of the select list. Can use this so current roster is at top of pick-list and rare people are at the bottom.
-	let rosterMember = { "alias": alias, "pos": pos, "fname": fname, "lname": lname, "pos2": pos2, "pos3": pos3, "sortOrderClass": sortOrderClass };
-	roster.push(rosterMember);
-};
-
-//working from existing list...
-//a hacky way to update the roster is just to add to this JSON object.
-const roster_20230501 = [{ alias: 'Chalmers', pos: 'Util', fname: 'Nick', lname: 'Chalmers', pos2: '1B', pos3: 'SS', sortOrderClass: '1' }, { alias: 'Burman', pos: '1B', fname: 'Adam', lname: 'Burman', pos2: 'RF', pos3: 'RCF', sortOrderClass: '1' }, { alias: 'Waddick', pos: '1B', fname: 'Brian', lname: 'Waddick', pos2: 'Util', pos3: 'RF', sortOrderClass: '1' }, { alias: 'Oppegaard', pos: '3B', fname: 'Dave', lname: 'Oppegaard', pos2: '', pos3: '', sortOrderClass: '1' }, { alias: 'Schaefer', pos: 'LCF', fname: 'Cole', lname: 'Schaefer', pos2: 'LF', pos3: 'RCF', sortOrderClass: '1' }, { alias: 'May', pos: 'LF', fname: 'Chris', lname: 'May', pos2: 'LCF', pos3: 'RCF', sortOrderClass: '1' }, { alias: 'Welter', pos: 'RF', fname: 'Andrew', lname: 'Welter', pos2: '', pos3: '', sortOrderClass: '1' }, { alias: 'Bieganek', pos: 'SS', fname: 'Aric', lname: 'Bieganek', pos2: '', pos3: '', sortOrderClass: '1' }, { alias: 'DeCausmeaker', pos: 'Util', fname: 'John', lname: 'DeCausmeaker', pos2: 'P', pos3: 'SS', sortOrderClass: '1' }, { alias: 'Norman', pos: 'LF', fname: 'Steve', lname: 'Norman', pos2: 'LCF', pos3: 'RCF', sortOrderClass: '1' }, { alias: 'Lanser', pos: 'RCF', fname: 'Eric', lname: 'Lanser', pos2: 'LCF', pos3: 'RF', sortOrderClass: '1' }, { alias: 'Travis', pos: '2B', fname: 'Lloyd', lname: 'Travis', pos2: '', pos3: '', sortOrderClass: '1' }, { alias: 'Mensink', pos: 'P', fname: 'Mike', lname: 'Mensink', pos2: '', pos3: '', sortOrderClass: '1' }];
-
-//add each person to the roster.
-for (let i = 0; i < roster_20230501.length; i++) {
-	addToRoster(roster_20230501[i].alias, roster_20230501[i].pos, roster_20230501[i].fname, roster_20230501[i].lname, roster_20230501[i].pos2, roster_20230501[i].pos3, roster_20230501[i].sortOrderClass);
-}
-
-//maybe sort roster for the pick-list. (sort on sortOrderClass then...alphabetical by name, or maybe by primary pos, or just the order they're already in...or random or whatever )
-
-
-/* ---------------- Make a Roster ----END----------------------*/
 /* ----------------  Determine Attendance. Assign Batting Order. Assign Role (Primary Position). ----START----------------------*/
 //some basic info:
 
@@ -113,8 +87,8 @@ let players = []; //list of player aliases
 
 //example player list: grab from 20230501 roster info (this was 5/1's attendees...in their batting order).
 //Front-end Dev note: you need to replace this with with another method for assigning attendees--namely, letting Steve choose it in the UI!
-for (let i = 0; i < roster_20230501.length; i++) {
-	players.push(roster_20230501[i].alias);
+for (let i = 0; i < roster.length; i++) {
+	players.push(roster[i].alias);
 }
 //end example set player list
 
@@ -217,28 +191,6 @@ let positionImportance = {
 	, 'RCF': 70
 	, 'RF': 10
 };
-
-//PlayerSkill. 0=incapable. 100 highest by convention. 
-//Another note on the scale: This will be randomized on the order of 0 to +20 points, (2 binary rolls of 0|5), so centered on +5). So ~ 5% of highest assignable skill by convention.
-let playerSkill = {
-	'Chalmers': { 'P': 70, 'C': 70, '1B': 80, '2B': 80, '3B': 80, 'SS': 80, 'LF': 85, 'LCF': 85, 'RCF': 85, 'RF': 85 }
-	, 'Burman': { 'P': 1, 'C': 70, '1B': 80, '2B': 50, '3B': 50, 'SS': 50, 'LF': 50, 'LCF': 50, 'RCF': 50, 'RF': 50 }
-	, 'Waddick': { 'P': 1, 'C': 70, '1B': 70, '2B': 70, '3B': 40, 'SS': 40, 'LF': 70, 'LCF': 70, 'RCF': 70, 'RF': 70 }
-	, 'Oppegaard': { 'P': 20, 'C': 70, '1B': 40, '2B': 60, '3B': 80, 'SS': 60, 'LF': 20, 'LCF': 20, 'RCF': 20, 'RF': 20 }
-	, 'Schaefer': { 'P': 1, 'C': 70, '1B': 50, '2B': 85, '3B': 60, 'SS': 60, 'LF': 95, 'LCF': 95, 'RCF': 95, 'RF': 95 }
-	, 'May': { 'P': 1, 'C': 70, '1B': 50, '2B': 60, '3B': 60, 'SS': 60, 'LF': 100, 'LCF': 100, 'RCF': 100, 'RF': 100 }
-	, 'Welter': { 'P': 1, 'C': 70, '1B': 50, '2B': 60, '3B': 20, 'SS': 10, 'LF': 60, 'LCF': 60, 'RCF': 70, 'RF': 75 }
-	, 'Bieganek': { 'P': 60, 'C': 70, '1B': 70, '2B': 90, '3B': 90, 'SS': 90, 'LF': 70, 'LCF': 70, 'RCF': 70, 'RF': 70 }
-	, 'DeCausmeaker': { 'P': 80, 'C': 70, '1B': 75, '2B': 75, '3B': 75, 'SS': 75, 'LF': 75, 'LCF': 75, 'RCF': 75, 'RF': 75 }
-	, 'Norman': { 'P': 70, 'C': 70, '1B': 30, '2B': 70, '3B': 70, 'SS': 70, 'LF': 99, 'LCF': 99, 'RCF': 99, 'RF': 99 }
-	, 'Lanser': { 'P': 50, 'C': 70, '1B': 50, '2B': 60, '3B': 40, 'SS': 60, 'LF': 85, 'LCF': 85, 'RCF': 85, 'RF': 85 }
-	, 'Travis': { 'P': 1, 'C': 70, '1B': 10, '2B': 70, '3B': 20, 'SS': 50, 'LF': 40, 'LCF': 40, 'RCF': 40, 'RF': 50 }
-	, 'Mensink': { 'P': 100, 'C': 60, '1B': 40, '2B': 1, '3B': 1, 'SS': 1, 'LF': 1, 'LCF': 1, 'RCF': 1, 'RF': 1 }
-
-};
-
-
-
 
 //check player role validity
 //each player is assigned. total length of this array matches numPlayers
@@ -1061,7 +1013,7 @@ let fillPositions = function (inning, rounds, scale) { //modify global variables
 	//score each combination. without (esimatedSkill) and with (noisySkill) noise.
 	let comboScores = [];
 	for (let i = 0; i < someCombos.length; i++) {
-		thisCombo = {};
+		let thisCombo = {};
 		thisCombo.index = i;
 		thisCombo.score = 0;
 		thisCombo.noisyScore = 0;
@@ -1177,7 +1129,7 @@ let makeNoisySkill = function (skill, rounds, scale) {
 	//skill = estimated player skill from playerSkill
 	//rounds = # of rounds of randomness added
 	//scale = how much 'skill' is added on winning roles
-	noisySkill = skill;	//start as skill
+	let noisySkill = skill;	//start as skill
 	//generate noise N times
 	for (let n = 0; n < rounds; n++) {
 		noisySkill = noisySkill + getRandomIntInclusive(0, 1) * scale;
@@ -1510,23 +1462,15 @@ const PrintSparseTable = function (batterInfo, formattingOptions) {
 			}
 			//end row
 			sparseTableHTML = sparseTableHTML + "</tr>";
-
 		}
 	}
-	
+	//done
+	return sparseTableHTML + "</table>";
 
-		//done
-
-
-		return sparseTableHTML + "</table>";
-	
 };
-
 //let sparseTable = PrintSparseTable(batterInfoByInning);
 //printDivHTML("sparsetable1",sparseTable);
 //-----------Sparse Table Output -------- END
-
-
 let batterInfos = [];
 batterInfos[0] = MakeBatterInfoByInning(top3[0], battingOrder);
 batterInfos[1] = MakeBatterInfoByInning(top3[1], battingOrder);

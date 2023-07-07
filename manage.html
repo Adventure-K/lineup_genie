@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lineup Genie</title>
+    <style>
+        table,
+        th,
+        td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+
+        th {
+            font-weight:bold;
+        }
+    </style>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <h1>Manage Team</h1>
+    <hr>
+    <br>
+    <button id="addPlayerBtn">Add Player</button>
+    <button id="defaultData">Load Default Team Data</button>
+    <br><br>
+    <div id="managePlayersDiv"></div>
+    <br>
+    <button id="generateLineup">Generate Lineup</button>
+    <div id="modalContainer"></div>
+
+    <script src="manage.js" type="module"></script>
+</body>
+
+</html>
