@@ -73,3 +73,21 @@ export let playerSkill = {
     , 'Mensink': { 'P': 100, 'C': 60, '1B': 40, '2B': 1, '3B': 1, 'SS': 1, 'LF': 1, 'LCF': 1, 'RCF': 1, 'RF': 1 }
 
 };
+
+export let battingOrder = []; //player (alias) in batting order
+
+battingOrder = [
+	'Chalmers'
+	, 'Norman'
+	, 'Waddick'
+	, 'Oppegaard'
+	, 'DeCausmeaker'
+	, 'Lanser'
+	, 'Bieganek'
+	, 'May'
+	, 'Schaefer'
+    , 'Welter'
+	, 'Burman'
+	, 'Travis'
+	, 'Mensink'
+];

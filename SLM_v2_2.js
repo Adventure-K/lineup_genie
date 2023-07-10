@@ -35,6 +35,7 @@ const daveIsCousin = true;
 
 import { roster } from './teamData.js';
 import { playerSkill } from './teamData.js';
+import { battingOrder } from './teamData.js';
 
 /* ----------------  Determine Attendance. Assign Batting Order. Assign Role (Primary Position). ----START----------------------*/
 //some basic info:
@@ -51,24 +52,6 @@ const onFieldPositions = {
 	, "RCF": { name: "Right-Center Field", num: 9, area: "outfield" }
 	, "RF": { name: "Right Field", num: 10, area: "outfield" }
 }; //included "area" to support infield vs outfield utility (in future versions). should probably remove it, b/c that will require a bunch more work and we're unlikely to use it.
-
-
-const roles = {
-	"P": { name: "Pitcher", num: 1, area: "infield" }
-	, "C": { name: "Catcher", num: 2, area: "infield" }
-	, "1B": { name: "1st Base", num: 3, area: "infield" }
-	, "2B": { name: "2nd Base", num: 4, area: "infield" }
-	, "3B": { name: "3rd Base", num: 5, area: "infield" }
-	, "SS": { name: "Short Stop", num: 6, area: "infield" }
-	, "LF": { name: "Left Field", num: 7, area: "outfield" }
-	, "LCF": { name: "Left-Center Field", num: 8, area: "outfield" }
-	, "RCF": { name: "Right-Center Field", num: 9, area: "outfield" }
-	, "RF": { name: "Right Field", num: 10, area: "outfield" }
-	, "Util": { name: "Utility", num: 11, area: "any" }
-	//,"IFU": {name:"Infield Utility",num:12,area:"infield"}	//obviated by optimizations utilizing playerSkill
-	//,"OFU": {name:"Outfield Utility",num:13,area:"outfield"}	//obviated by optimizations utilizing playerSkill
-	, "DH": { name: "NOT IMPLEMENTED Designated Hitter", num: 14, area: "bench" }		//not tested yet. But should be ready. Perhaps try after v1 acceptance.
-}; //Front-end Dev note: maybe you want this as a pick-list for steve to choose from for assigning roles
 
 //define position adjacencies of concern:
 let avoidedAdjacencies = [
@@ -92,28 +75,7 @@ for (let i = 0; i < roster.length; i++) {
 }
 //end example set player list
 
-let battingOrder = []; //player (alias) in batting order
 
-//example batting order: grab from 20230501 roster info (this was 5/1's attendees...in their batting order).
-//Front-end Dev note: you need to replace this with with another method for assigning batting order--namely, letting Steve choose it in the UI!
-//for (let i=0; i < roster_20230501.length;i++) {
-//	battingOrder.push(roster_20230501[i].alias);
-//}
-
-battingOrder = [
-	'Chalmers'
-	, 'Norman'
-	, 'Waddick'
-	, 'Oppegaard'
-	, 'DeCausmeaker'
-	, 'Lanser'
-	, 'Bieganek'
-	, 'May'
-	, 'Schaefer'
-	, 'Burman'
-	, 'Travis'
-	, 'Mensink'
-];
 
 //end example set batting order
 let playerRoles = {}; //player (alias):role

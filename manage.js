@@ -1,35 +1,42 @@
 import { roster } from './teamData.js';
 import { roles } from './teamData.js';
 import { playerSkill } from './teamData.js';
+import { battingOrder } from './teamData.js';
 
 const defaultRoster = roster;
 const defaultSkills = playerSkill;
+const defaultBattingOrder = battingOrder;
 const rc = JSON.parse(localStorage.getItem('roster'));
 const sc = JSON.parse(localStorage.getItem('playerSkill'));
+const bo = JSON.parse(localStorage.getItem('battingOrder'));
 window.rc = rc; // This line is required to access a value in the console from a JS file loaded as a module
 window.sc = sc;
 
-
-
 //-----------Populate Team Management Table----START----//
-const populateManagementTable = function (mRoster) {
+const populateManagementTable = function (mRoster, battingOrder) {
     let managementTable = "<table>";
+    console.log('mRoster: ', mRoster)
+    console.log('battingOrder: ', battingOrder)
 
     // Headers
     managementTable += "<tr><th>#</th><th>Player</th><th>Pos 1</th><th>Pos 2</th><th>Pos 3</th><th>Edit</th><th>Reorder</th></tr>";
 
     // Data
-    for (let p = 0; p < mRoster.length; p++) { // For each player on roster:
-        let lineupOrder = p + 1; // Number by batting order
-        let last = mRoster[p].lName.toString().toUpperCase();
-        managementTable += "<tr><td class='centerTD'>" + lineupOrder + "</td>"; // new row, first cell is order #
-        managementTable += "<td>" + last + ", " + mRoster[p].fName + "</td>"; // This cell is name LAST, First
-        managementTable += "<td class='centerTD' id='pos1SelectCell" + p + "'></td>"; // This cell holds main position select
-        managementTable += "<td class='centerTD' id='pos2SelectCell" + p + "'></td>"; // This cell holds 2nd position select
-        managementTable += "<td class='centerTD' id='pos3SelectCell" + p + "'></td>"; // This cell holds 3rd position select
-        managementTable += "<td class='centerTD'><span id='editBtn" + p + "' class='editBtn'>📝</span></td>"; // This cell holds an edit player button
-        managementTable += "<td class='centerTD' id='reorderHandle" + p + "'>☰</td>" // This cell holds a handle to reorder with click and drag
-        managementTable += "</tr>"; // end row
+    let counter = 0; // Batting order for display
+    for (let alias of battingOrder) {
+        const p = mRoster.find(obj => obj.alias === alias) // For each player on roster:
+        console.log('p: ', p)
+            let last = p.lName.toString().toUpperCase();
+            managementTable += "<tr><td class='centerTD'>" + (counter + 1) + "</td>"; // new row, first cell is order #
+            managementTable += "<td>" + last + ", " + p.fName + "</td>"; // This cell is name LAST, First
+            managementTable += "<td class='centerTD' id='pos1SelectCell" + counter + "'></td>"; // This cell holds main position select
+            managementTable += "<td class='centerTD' id='pos2SelectCell" + counter + "'></td>"; // This cell holds 2nd position select
+            managementTable += "<td class='centerTD' id='pos3SelectCell" + counter + "'></td>"; // This cell holds 3rd position select
+            managementTable += "<td class='centerTD'><span id='editBtn" + counter + "' class='editBtn'>📝</span></td>"; // This cell holds an edit player button
+            managementTable += "<td class='centerTD' id='reorderHandle" + counter + "'>☰</td>" // This cell holds a handle to reorder with click and drag
+            managementTable += "</tr>"; // end row
+            counter++;
+        
     }
     managementTable += "</table>"
     return managementTable;
@@ -47,7 +54,7 @@ function addEditListeners() { // Add click listeners to make the edit buttons wo
 //-----------Add Position Selectors-------START----//
 const addPositionSelectors = function () {
     let counter = 0; // Used to generate unique element IDs
-    for (let p = 0; p < roster.length; p++) { // Loop of Players (Table rows)
+    for (let p = 0; p < rc.length; p++) { // Loop of Players (Table rows)
         const pos1Select = document.createElement('select'); // Generate dropdowns
         const pos2Select = document.createElement('select');
         const pos3Select = document.createElement('select');
@@ -110,24 +117,38 @@ const addPositionSelectors = function () {
 //-----------Add Position Selectors-------END------//
 
 const closeBtn = document.getElementsByClassName('close')[0];
+const editSaveBtn = document.getElementById('editSaveBtn');
+const editPlayerModal = document.getElementById('editModal');
+const skillsDiv = document.getElementById('editSkills');
+const editLName = document.getElementById('editLName');
+const editFName = document.getElementById('editFName');
 
+editSaveBtn.addEventListener('click', function () {
+    editPlayerModal.style.display = 'none';
+    editLName.value = '';
+    editFName.value = '';
+    skillsDiv.innerHTML = '';
+})
+
+closeBtn.addEventListener('click', function () {
+    editPlayerModal.style.display = 'none';
+    editLName.value = '';
+    editFName.value = '';
+    skillsDiv.innerHTML = '';
+})
 
 //-----------Edit Player------START-----------------//
 const editPlayer = function (player) {
     console.log('edit ', player)
-    const editPlayerModal = document.getElementById('editModal');
-    const skillsDiv = document.getElementById('editSkills');
-    const editLName = document.getElementById('editLName');
-    const editFName = document.getElementById('editFName');
-    editLName.setAttribute('placeholder', roster[player].lName);
-    editFName.setAttribute('placeholder', roster[player].fName);
+    editLName.value = roster[player].lName;
+    editFName.value = roster[player].fName;
     editPlayerModal.style.display = 'block';
     // Skill sliders
     const skillsData = JSON.parse(localStorage.getItem('playerSkill'));
     const thisPlayer = skillsData[roster[player].lName];
     console.log(thisPlayer)
     for (let [key, value] of Object.entries(thisPlayer)) {
-        skillsDiv.innerHTML += '<span>' + key + ':</span>' // Slider label
+        skillsDiv.innerHTML += '<span>' + key + '</span>' // Slider label
         skillsDiv.innerHTML += '<input class="skillSlider" id="slider_' + key + '" type="range" min="1" max="100" value="' + value + '">'
         skillsDiv.innerHTML += '<input type="number" class="curVal" min="1" max="100" value=' + value + '><br>' // Current value display (editable)
     }
@@ -152,14 +173,6 @@ const editPlayer = function (player) {
         })
     }
 
-    closeBtn.addEventListener('click', function () {
-        if (confirm("Discard ell edits?")) {
-            editPlayerModal.style.display = 'none';
-            editLName.setAttribute('placeholder', '');
-            editFName.setAttribute('placeholder', '');
-            skillsDiv.innerHTML = '';
-        }
-    })
 }
 //-----------Edit Player------END-----------------//
 
@@ -171,11 +184,10 @@ const mgmtTableToHTML = function (divId, content) {
     document.getElementById(divId).innerHTML = content;
 };
 const loadTable = function () {
-    let loadedData = JSON.parse(localStorage.getItem('roster'));
-    if (loadedData === null) {
+    if (rc === null) {
         mgmtTableToHTML("managePlayersDiv", "*** No player data found.  Add Player or Load Default Team Data. ***");
     } else {
-        let managementTableDOM = populateManagementTable(loadedData);
+        let managementTableDOM = populateManagementTable(rc, bo);
         mgmtTableToHTML("managePlayersDiv", managementTableDOM);
         addPositionSelectors();
         addEditListeners();
@@ -192,6 +204,7 @@ loadDefaultBtn.addEventListener('click', function () {
         console.log('DEFAULT DATA')
         localStorage.setItem('roster', JSON.stringify(defaultRoster));
         localStorage.setItem('playerSkill', JSON.stringify(defaultSkills));
+        localStorage.setItem('battingOrder', JSON.stringify(defaultBattingOrder));
         localStorage.setItem('roles', JSON.stringify(roles));
         loadTable();
     }
