@@ -33,8 +33,13 @@ const steveIsTheBestManager = true;
 const chalmersDoesHisBitTooWhenNeeded = true;
 const daveIsCousin = true;
 
-import { roster } from './teamData.js';
-import { playerSkill } from './teamData.js';
+import { roster as defaultRoster } from './teamData.js';
+import { playerSkill as defaultPlayerSkills } from './teamData.js';
+import { battingOrder as defaultBattingOrder } from './teamData.js';
+
+const roster = JSON.parse(localStorage.getItem('roster'));
+const playerSkill = JSON.parse(localStorage.getItem('playerSkill'));
+const battingOrder = JSON.parse(localStorage.getItem('battingOrder'));
 
 /* ----------------  Determine Attendance. Assign Batting Order. Assign Role (Primary Position). ----START----------------------*/
 //some basic info:
@@ -51,24 +56,6 @@ const onFieldPositions = {
 	, "RCF": { name: "Right-Center Field", num: 9, area: "outfield" }
 	, "RF": { name: "Right Field", num: 10, area: "outfield" }
 }; //included "area" to support infield vs outfield utility (in future versions). should probably remove it, b/c that will require a bunch more work and we're unlikely to use it.
-
-
-const roles = {
-	"P": { name: "Pitcher", num: 1, area: "infield" }
-	, "C": { name: "Catcher", num: 2, area: "infield" }
-	, "1B": { name: "1st Base", num: 3, area: "infield" }
-	, "2B": { name: "2nd Base", num: 4, area: "infield" }
-	, "3B": { name: "3rd Base", num: 5, area: "infield" }
-	, "SS": { name: "Short Stop", num: 6, area: "infield" }
-	, "LF": { name: "Left Field", num: 7, area: "outfield" }
-	, "LCF": { name: "Left-Center Field", num: 8, area: "outfield" }
-	, "RCF": { name: "Right-Center Field", num: 9, area: "outfield" }
-	, "RF": { name: "Right Field", num: 10, area: "outfield" }
-	, "Util": { name: "Utility", num: 11, area: "any" }
-	//,"IFU": {name:"Infield Utility",num:12,area:"infield"}	//obviated by optimizations utilizing playerSkill
-	//,"OFU": {name:"Outfield Utility",num:13,area:"outfield"}	//obviated by optimizations utilizing playerSkill
-	, "DH": { name: "NOT IMPLEMENTED Designated Hitter", num: 14, area: "bench" }		//not tested yet. But should be ready. Perhaps try after v1 acceptance.
-}; //Front-end Dev note: maybe you want this as a pick-list for steve to choose from for assigning roles
 
 //define position adjacencies of concern:
 let avoidedAdjacencies = [
@@ -92,48 +79,36 @@ for (let i = 0; i < roster.length; i++) {
 }
 //end example set player list
 
-let battingOrder = []; //player (alias) in batting order
 
-//example batting order: grab from 20230501 roster info (this was 5/1's attendees...in their batting order).
-//Front-end Dev note: you need to replace this with with another method for assigning batting order--namely, letting Steve choose it in the UI!
-//for (let i=0; i < roster_20230501.length;i++) {
-//	battingOrder.push(roster_20230501[i].alias);
-//}
-
-battingOrder = [
-	'Chalmers'
-	, 'Norman'
-	, 'Waddick'
-	, 'Oppegaard'
-	, 'DeCausmeaker'
-	, 'Lanser'
-	, 'Bieganek'
-	, 'May'
-	, 'Schaefer'
-	, 'Burman'
-	, 'Travis'
-	, 'Mensink'
-];
 
 //end example set batting order
 let playerRoles = {}; //player (alias):role
 
 //example player roles (i.e. positions): 
 //Front-end Dev note: you need to replace this with with another method for assigning player roles/positions--namely, letting Steve choose it at any given time!
-playerRoles = {
-	Chalmers: 'Util'
-	, Burman: '1B'
-	, Waddick: 'RF'
-	, Oppegaard: '3B'
-	, Schaefer: 'LCF'
-	, Bieganek: 'SS'
-	, DeCausmeaker: 'Util'
-	, Norman: 'RCF'	//LF, Util, C
-	, Lanser: 'DH'
-	, May: 'LF'
-	, Travis: '2B'
-	, Mensink: 'P'
-};
+// playerRoles = {
+// 	Chalmers: 'Util'
+// 	, Burman: '1B'
+// 	, Waddick: 'RF'
+// 	, Oppegaard: '3B'
+// 	, Schaefer: 'LCF'
+// 	, Bieganek: 'SS'
+// 	, DeCausmeaker: 'Util'
+// 	, Norman: 'RCF'	//LF, Util, C
+// 	, Lanser: 'DH'
+// 	, May: 'LF'
+// 	, Travis: '2B'
+// 	, Mensink: 'P'
+// };
+
+for (let p = 0; p < roster.length; p++) {
+	let thisPlayer = roster[p];
+	let alias = thisPlayer.alias;
+	let pos = thisPlayer.pos;
+	playerRoles[alias] = pos;
+}
+console.log('new playerRoles obj: ', playerRoles)
+
 //end example set player roles (positions)
 
 //check batting order validity
@@ -356,7 +331,7 @@ const checkPlayerRoleValidity = function (pr, p) {	//pr = playerRoles {}, p=play
 		return true;
 	} else {
 		console.log("!!!!! Role Assignment FAILS validation !!!!!");
-		console.log("Roles with wrong # of people:" + JSON.stringify(posCheck));
+		console.log("Roles with right # of people:" + JSON.stringify(posCheck));
 		//console.log(posCheck);
 		console.log("# in each Role:" + JSON.stringify(posNums));
 		//console.log(posNums);

@@ -14,7 +14,7 @@
         }
 
         th {
-            font-weight:bold;
+            font-weight: bold;
         }
     </style>
     <link rel="stylesheet" href="style.css">
@@ -29,8 +29,19 @@
     <br><br>
     <div id="managePlayersDiv"></div>
     <br>
-    <button id="generateLineup">Generate Lineup</button>
-    <div id="modalContainer"></div>
+    <button id="generateLineupBtn">Generate Lineup</button>
+
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Edit Player</h2>
+            <input type="text" id="editFName">
+            <input type="text" id="editLName">
+            <div id="editSkills"></div>
+            <button id="editSaveBtn">Save</button>
+        </div>
+    </div>
+
 
     <script src="manage.js" type="module"></script>
 </body>

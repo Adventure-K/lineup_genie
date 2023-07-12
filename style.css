@@ -1,5 +1,8 @@
+#editModal {
+    display: none;
+}
+
 .modal {
-    /* display: none; */
     position: fixed;
     z-index: 9999;
     left: 0;
@@ -18,7 +21,7 @@
     max-width: 600px;
 }
 
-.closeBtn {
+.close {
     color: #aaa;
     float: right;
     font-size: 28px;
@@ -26,7 +29,7 @@
     cursor: pointer;
 }
 
-.editButton {
+.editBtn {
     cursor: pointer;
 }
 
