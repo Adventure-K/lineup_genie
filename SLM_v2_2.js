@@ -33,13 +33,13 @@ const steveIsTheBestManager = true;
 const chalmersDoesHisBitTooWhenNeeded = true;
 const daveIsCousin = true;
 
-import { roster as defaultRoster } from './teamData.js';
+import { roster as defaultRoster } from './teamData.js';				// Default data set; shouldn't be needed on this page anymore
 import { playerSkill as defaultPlayerSkills } from './teamData.js';
-import { battingOrder as defaultBattingOrder } from './teamData.js';
+import { battingOrder as defaultBattingOrder } from './teamData.js';	
 
-const roster = JSON.parse(localStorage.getItem('roster'));
-const playerSkill = JSON.parse(localStorage.getItem('playerSkill'));
-const battingOrder = JSON.parse(localStorage.getItem('battingOrder'));
+const roster = JSON.parse(localStorage.getItem('roster'));				// GET
+const playerSkill = JSON.parse(localStorage.getItem('playerSkill'));	// GET
+const battingOrder = JSON.parse(localStorage.getItem('battingOrder'));	// GET
 
 /* ----------------  Determine Attendance. Assign Batting Order. Assign Role (Primary Position). ----START----------------------*/
 //some basic info:
@@ -1467,6 +1467,10 @@ printDivHTML("optimizationinfo", optmessage);
 
 /* ----------------  Print Outputs ----END----------------------*/
 
+// Manage Team button
+document.getElementById('manageTeamBtn').addEventListener('click', function () {
+	window.location.href = "manage.html"
+})
 
 
 //};
