@@ -33,9 +33,13 @@ const steveIsTheBestManager = true;
 const chalmersDoesHisBitTooWhenNeeded = true;
 const daveIsCousin = true;
 
-import { roster } from './teamData.js';
-import { playerSkill } from './teamData.js';
-import { battingOrder } from './teamData.js';
+import { roster as defaultRoster } from './teamData.js';
+import { playerSkill as defaultPlayerSkills } from './teamData.js';
+import { battingOrder as defaultBattingOrder } from './teamData.js';
+
+const roster = JSON.parse(localStorage.getItem('roster'));
+const playerSkill = JSON.parse(localStorage.getItem('playerSkill'));
+const battingOrder = JSON.parse(localStorage.getItem('battingOrder'));
 
 /* ----------------  Determine Attendance. Assign Batting Order. Assign Role (Primary Position). ----START----------------------*/
 //some basic info:

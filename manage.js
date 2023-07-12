@@ -6,10 +6,10 @@ import { battingOrder } from './teamData.js';
 const defaultRoster = roster;
 const defaultSkills = playerSkill;
 const defaultBattingOrder = battingOrder;
-const rc = JSON.parse(localStorage.getItem('roster'));
-const sc = JSON.parse(localStorage.getItem('playerSkill'));
-const bo = JSON.parse(localStorage.getItem('battingOrder'));
-window.rc = rc; // This line is required to access a value in the console from a JS file loaded as a module
+const rc = JSON.parse(localStorage.getItem('roster'));          // GET
+const sc = JSON.parse(localStorage.getItem('playerSkill'));     // GET
+const bo = JSON.parse(localStorage.getItem('battingOrder'));    // GET
+window.rc = rc; // This line is required to access the rc value in the console from a JS file loaded as a module
 window.sc = sc;
 
 //----------Global Variables & Event Listeners---------------//
@@ -28,9 +28,49 @@ closeBtn.addEventListener('click', function () {
     skillsDiv.innerHTML = '';
 })
 
-// generateLineupBtn.addEventListener('click', function() {
-
-// })
+generateLineupBtn.addEventListener('click', function () {
+    const order = bo;
+    const pos1Choices = document.getElementsByClassName('pos1Select');
+    const pos2Choices = document.getElementsByClassName('pos2Select');
+    const pos3Choices = document.getElementsByClassName('pos3Select');
+    const pos1Data = {};
+    const pos2Data = {};
+    const pos3Data = {};
+    for (let i = 0; i < pos1Choices.length; i++) { // Create object of current pos 1 selections for all participants
+        let alias = order[i];
+        let pos = pos1Choices[i].value;
+        pos1Data[alias] = pos;
+    }
+    for (let i = 0; i < pos2Choices.length; i++) { // Create object of current pos 2 selections for all participants
+        let alias = order[i];
+        let pos2 = pos2Choices[i].value;
+        pos2Data[alias] = pos2;
+    }
+    for (let i = 0; i < pos3Choices.length; i++) { // Create object of current pos 3 selections for all participants
+        let alias = order[i];
+        let pos3 = pos3Choices[i].value;
+        pos3Data[alias] = pos3;
+    }
+    for (let i = 0; i < rc.length; i++) { // Update main roster object with new position selections
+        const player = rc[i];
+        const alias = player.alias;
+        if (pos1Data.hasOwnProperty(alias)) {
+            player.pos = pos1Data[alias]
+        }
+        if (pos2Data.hasOwnProperty(alias)) {
+            player.pos2 = pos2Data[alias]
+        }
+        if (pos3Data.hasOwnProperty(alias)) {
+            player.pos3 = pos3Data[alias]
+        }
+    }
+    // console.log('pos 1 ', pos1Data);
+    // console.log('pos 2 ', pos2Data);
+    // console.log('pos 3 ', pos3Data);
+    console.log(rc)
+    localStorage.setItem('roster', JSON.stringify(rc));     // POST new pos selections to roster
+    window.location.href = "SLM_v2.html"
+})
 
 //-----------Populate Team Management Table----START----//
 const populateManagementTable = function (mRoster, battingOrder) {
@@ -73,9 +113,15 @@ function addEditListeners() { // Add click listeners to make the edit buttons wo
 const addPositionSelectors = function () {
     let counter = 0; // Used to generate unique element IDs
     for (let p of rc) { // Loop of Players (Table rows)
-        const pos1Select = document.createElement('select'); // Generate dropdowns
+        const pos1Select = document.createElement('select');    // Generate dropdowns
+        pos1Select.id = 'pos1Select_' + counter;                // Give unique ID
+        pos1Select.className = 'pos1Select'                     // Give all pos 1 selectors the same class
         const pos2Select = document.createElement('select');
+        pos2Select.id = 'pos2Select_' + counter;
+        pos2Select.className = 'pos2Select'
         const pos3Select = document.createElement('select');
+        pos3Select.id = 'pos3Select_' + counter;
+        pos3Select.className = 'pos3Select'
 
         const pos2Null = document.createElement('option'); // Create blank options for pos 2 and 3
         pos2Null.value = '';
@@ -110,15 +156,8 @@ const addPositionSelectors = function () {
         inactive.textContent = 'Inactive';
         pos1Select.appendChild(inactive);
 
-        const pos1SelectId = 'pos1Select_' + counter; // make unique ID for each dropdown
-        const pos2SelectId = 'pos2Select_' + counter;
-        const pos3SelectId = 'pos3Select_' + counter;
-        pos1Select.id = pos1SelectId;
-        pos2Select.id = pos2SelectId;
-        pos3Select.id = pos3SelectId;
-
-        const targetElement1 = document.getElementById("pos1SelectCell" + p.alias); // Insert dropdowns into correct cells
-        targetElement1.appendChild(pos1Select);
+        const targetElement1 = document.getElementById("pos1SelectCell" + p.alias); // Insert dropdowns into correct cells. Dropdown and cell ID# should correspond
+        targetElement1.appendChild(pos1Select);                                     // Ergo line up correctly regardless of batting order
         const targetElement2 = document.getElementById("pos2SelectCell" + p.alias);
         targetElement2.appendChild(pos2Select);
         const targetElement3 = document.getElementById("pos3SelectCell" + p.alias);
@@ -142,9 +181,9 @@ const editPlayer = function (player) {
     editFName.value = player.fName;
     editPlayerModal.style.display = 'block';
     // Skill sliders
-    const playerSkills = sc[player.lName];
-    console.log('current player\'s skills: ', playerSkills)
-    for (let [key, value] of Object.entries(playerSkills)) {
+    const thisPlayerSkills = sc[player.lName];
+    console.log('current player\'s skills: ', thisPlayerSkills)
+    for (let [key, value] of Object.entries(thisPlayerSkills)) {
         skillsDiv.innerHTML += '<span>' + key + '</span>' // Slider label
         skillsDiv.innerHTML += '<input class="skillSlider" id="' + key + '" type="range" min="1" max="100" value="' + value + '">'
         skillsDiv.innerHTML += '<input type="number" class="curVal" min="1" max="100" value=' + value + '><br>' // Current value display (editable)
@@ -158,8 +197,8 @@ const editPlayer = function (player) {
             // console.log(sliders[i].id, sliders[i].value)
             curVals[i].value = sliders[i].value;
             const currentSkill = sliders[i].id;
-            playerSkills[currentSkill] = parseInt(sliders[i].value);
-            console.log(playerSkills)
+            thisPlayerSkills[currentSkill] = parseInt(sliders[i].value);
+            console.log(thisPlayerSkills)
         })
     }
     // & Limit numerical inputs to valid values
@@ -173,19 +212,19 @@ const editPlayer = function (player) {
             }
             sliders[i].value = curVals[i].value;
             const currentSkill = sliders[i].id;
-            playerSkills[currentSkill] = parseInt(curVals[i].value);
-            console.log(playerSkills)
+            thisPlayerSkills[currentSkill] = parseInt(curVals[i].value);
+            console.log(thisPlayerSkills)
         })
     }
     editSaveBtn.addEventListener('click', function () {
-        saveEdit(player, playerSkills);
+        saveEdit(player, thisPlayerSkills);
     })
 }
 
-function saveEdit(player, playerSkills) {
-    sc[player.lName] = playerSkills;
+function saveEdit(player, thisPlayerSkills) {
+    sc[player.lName] = thisPlayerSkills;
     console.log(sc);
-    localStorage.setItem('playerSkill', JSON.stringify(sc));
+    localStorage.setItem('playerSkill', JSON.stringify(sc)); // POST
     editPlayerModal.style.display = 'none';
     editLName.value = '';
     editFName.value = '';
@@ -223,10 +262,10 @@ const loadDefaultBtn = document.getElementById('defaultData');
 loadDefaultBtn.addEventListener('click', function () {
     if (confirm("THIS WILL OVERRIDE ANY SAVED PLAYER DATA. PROCEED?")) {
         console.log('DEFAULT DATA')
-        localStorage.setItem('roster', JSON.stringify(defaultRoster));
-        localStorage.setItem('playerSkill', JSON.stringify(defaultSkills));
-        localStorage.setItem('battingOrder', JSON.stringify(defaultBattingOrder));
-        localStorage.setItem('roles', JSON.stringify(roles));
+        localStorage.setItem('roster', JSON.stringify(defaultRoster));              // POST
+        localStorage.setItem('playerSkill', JSON.stringify(defaultSkills));         // POST
+        localStorage.setItem('battingOrder', JSON.stringify(defaultBattingOrder));  // POST
+        localStorage.setItem('roles', JSON.stringify(roles));                       // POST
         loadTable();
     }
 });
