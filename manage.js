@@ -15,12 +15,11 @@ window.sc = sc;
 //----------Global Variables & Event Listeners---------------//
 const closeBtn = document.getElementsByClassName('close')[0];
 const editSaveBtn = document.getElementById('editSaveBtn');
+const generateLineupBtn = document.getElementById('generateLineupBtn')
 const editPlayerModal = document.getElementById('editModal');
 const skillsDiv = document.getElementById('editSkills');
 const editLName = document.getElementById('editLName');
 const editFName = document.getElementById('editFName');
-
-
 
 closeBtn.addEventListener('click', function () {
     editPlayerModal.style.display = 'none';
@@ -28,6 +27,10 @@ closeBtn.addEventListener('click', function () {
     editFName.value = '';
     skillsDiv.innerHTML = '';
 })
+
+// generateLineupBtn.addEventListener('click', function() {
+
+// })
 
 //-----------Populate Team Management Table----START----//
 const populateManagementTable = function (mRoster, battingOrder) {

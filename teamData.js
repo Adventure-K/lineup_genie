@@ -20,14 +20,14 @@ const addToRoster = function (alias, pos, fName, lName, pos2, pos3, sortOrderCla
 const roster_20230501 = [
     { alias: 'Chalmers', pos: 'Util', fName: 'Nick', lName: 'Chalmers', pos2: '1B', pos3: 'SS', sortOrderClass: '1' },
     { alias: 'Burman', pos: '1B', fName: 'Adam', lName: 'Burman', pos2: 'RF', pos3: 'RCF', sortOrderClass: '1' },
-    { alias: 'Waddick', pos: '1B', fName: 'Brian', lName: 'Waddick', pos2: 'Util', pos3: 'RF', sortOrderClass: '1' },
+    { alias: 'Waddick', pos: 'Util', fName: 'Brian', lName: 'Waddick', pos2: 'Util', pos3: 'RF', sortOrderClass: '1' },
     { alias: 'Oppegaard', pos: '3B', fName: 'Dave', lName: 'Oppegaard', pos2: '', pos3: '', sortOrderClass: '1' },
     { alias: 'Schaefer', pos: 'LCF', fName: 'Cole', lName: 'Schaefer', pos2: 'LF', pos3: 'RCF', sortOrderClass: '1' },
     { alias: 'May', pos: 'LF', fName: 'Chris', lName: 'May', pos2: 'LCF', pos3: 'RCF', sortOrderClass: '1' },
     { alias: 'Welter', pos: 'RF', fName: 'Andrew', lName: 'Welter', pos2: '', pos3: '', sortOrderClass: '1' },
     { alias: 'Bieganek', pos: 'SS', fName: 'Aric', lName: 'Bieganek', pos2: '', pos3: '', sortOrderClass: '1' },
     { alias: 'DeCausmeaker', pos: 'Util', fName: 'John', lName: 'DeCausmeaker', pos2: 'P', pos3: 'SS', sortOrderClass: '1' },
-    { alias: 'Norman', pos: 'LF', fName: 'Steve', lName: 'Norman', pos2: 'LCF', pos3: 'RCF', sortOrderClass: '1' },
+    { alias: 'Norman', pos: 'Util', fName: 'Steve', lName: 'Norman', pos2: 'LCF', pos3: 'RCF', sortOrderClass: '1' },
     { alias: 'Lanser', pos: 'RCF', fName: 'Eric', lName: 'Lanser', pos2: 'LCF', pos3: 'RF', sortOrderClass: '1' },
     { alias: 'Travis', pos: '2B', fName: 'Lloyd', lName: 'Travis', pos2: '', pos3: '', sortOrderClass: '1' },
     { alias: 'Mensink', pos: 'P', fName: 'Mike', lName: 'Mensink', pos2: '', pos3: '', sortOrderClass: '1' }

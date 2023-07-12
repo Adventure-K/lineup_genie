@@ -82,20 +82,29 @@ let playerRoles = {}; //player (alias):role
 
 //example player roles (i.e. positions): 
 //Front-end Dev note: you need to replace this with with another method for assigning player roles/positions--namely, letting Steve choose it at any given time!
-playerRoles = {
-	Chalmers: 'Util'
-	, Burman: '1B'
-	, Waddick: 'RF'
-	, Oppegaard: '3B'
-	, Schaefer: 'LCF'
-	, Bieganek: 'SS'
-	, DeCausmeaker: 'Util'
-	, Norman: 'RCF'	//LF, Util, C
-	, Lanser: 'DH'
-	, May: 'LF'
-	, Travis: '2B'
-	, Mensink: 'P'
-};
+// playerRoles = {
+// 	Chalmers: 'Util'
+// 	, Burman: '1B'
+// 	, Waddick: 'RF'
+// 	, Oppegaard: '3B'
+// 	, Schaefer: 'LCF'
+// 	, Bieganek: 'SS'
+// 	, DeCausmeaker: 'Util'
+// 	, Norman: 'RCF'	//LF, Util, C
+// 	, Lanser: 'DH'
+// 	, May: 'LF'
+// 	, Travis: '2B'
+// 	, Mensink: 'P'
+// };
+
+for (let p = 0; p < roster.length; p++) {
+	let thisPlayer = roster[p];
+	let alias = thisPlayer.alias;
+	let pos = thisPlayer.pos;
+	playerRoles[alias] = pos;
+}
+console.log('new playerRoles obj: ', playerRoles)
+
 //end example set player roles (positions)
 
 //check batting order validity
@@ -318,7 +327,7 @@ const checkPlayerRoleValidity = function (pr, p) {	//pr = playerRoles {}, p=play
 		return true;
 	} else {
 		console.log("!!!!! Role Assignment FAILS validation !!!!!");
-		console.log("Roles with wrong # of people:" + JSON.stringify(posCheck));
+		console.log("Roles with right # of people:" + JSON.stringify(posCheck));
 		//console.log(posCheck);
 		console.log("# in each Role:" + JSON.stringify(posNums));
 		//console.log(posNums);
