@@ -69,7 +69,7 @@ generateLineupBtn.addEventListener('click', function () {
     // console.log('pos 3 ', pos3Data);
     console.log(rc)
     localStorage.setItem('roster', JSON.stringify(rc));     // POST new pos selections to roster
-    window.location.href = "SLM_v2.html"
+    window.location.href = "SLM_v2.html"                    // Load generator page
 })
 
 //-----------Populate Team Management Table----START----//
