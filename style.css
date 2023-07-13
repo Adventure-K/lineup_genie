@@ -36,3 +36,8 @@
 .centerTD {
     text-align: center;
 }
+
+.up,
+.down {
+    cursor: pointer;
+}

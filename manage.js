@@ -1,16 +1,14 @@
-import { roster } from './teamData.js';
 import { roles } from './teamData.js';
-import { playerSkill } from './teamData.js';
-import { battingOrder } from './teamData.js';
+import { roster as defaultRoster } from './teamData.js';
+import { playerSkill as defaultSkills } from './teamData.js';
+import { battingOrder as defaultBattingOrder } from './teamData.js';
 
-const defaultRoster = roster;
-const defaultSkills = playerSkill;
-const defaultBattingOrder = battingOrder;
 const rc = JSON.parse(localStorage.getItem('roster'));          // GET
 const sc = JSON.parse(localStorage.getItem('playerSkill'));     // GET
 const bo = JSON.parse(localStorage.getItem('battingOrder'));    // GET
 window.rc = rc; // This line is required to access the rc value in the console from a JS file loaded as a module
 window.sc = sc;
+window.bo = bo;
 
 //----------Global Variables & Event Listeners---------------//
 const closeBtn = document.getElementsByClassName('close')[0];
@@ -68,7 +66,7 @@ generateLineupBtn.addEventListener('click', function () {
     // console.log('pos 2 ', pos2Data);
     // console.log('pos 3 ', pos3Data);
     console.log(rc)
-    localStorage.setItem('roster', JSON.stringify(rc));     // POST new pos selections to roster
+    localStorage.setItem('roster', JSON.stringify(rc));     // POST new pos selections to localStorage roster
     window.location.href = "SLM_v2.html"                    // Load generator page
 })
 
@@ -79,19 +77,24 @@ const populateManagementTable = function (mRoster, battingOrder) {
     console.log('battingOrder: ', battingOrder)
 
     // Headers
-    managementTable += "<tr><th>#</th><th>Player</th><th>Pos 1</th><th>Pos 2</th><th>Pos 3</th><th>Edit</th><th>Reorder</th></tr>";
+    managementTable += "<tr><th>Reorder</th><th>Player</th><th>Pos 1</th><th>Pos 2</th><th>Pos 3</th><th>Edit Skills</th></tr>";
 
     // Data
-    let counter = 1; // For batting order display
-    for (let key of battingOrder) {
-        const player = mRoster.find(rosterObj => rosterObj.alias === key) // Find each player in roster according to batting order
-        managementTable += "<tr><td class='centerTD'>" + counter + "</td>"; // new row, first cell is batting order
+    let counter = 0;
+    for (let name of battingOrder) {
+        const player = mRoster.find(rosterObj => rosterObj.alias === name) // Find each player in roster according to batting order
+        if (counter === 0) {
+            managementTable += "<tr><td class='centerTD'><span class='up' style='display:none;'>⬆️</span> <span class='down'>⬇️</span></td>"; // New row, this cell holds reorder buttons. 
+        } else if (counter === battingOrder.length - 1) {
+            managementTable += "<tr><td class='centerTD'><span class='up'>⬆️</span> <span class='down' style='display:none;'>⬇️</span></td>"; // Conditional render for first and last rows
+        } else {
+            managementTable += "<tr><td class='centerTD'><span class='up'>⬆️</span> <span class='down'>⬇️</span></td>"; 
+        }
         managementTable += "<td>" + (player.lName.toUpperCase()) + ", " + player.fName + "</td>"; // Player name
         managementTable += "<td class='centerTD' id='pos1SelectCell" + player.lName + "'></td>"; // Main position select
         managementTable += "<td class='centerTD' id='pos2SelectCell" + player.lName + "'></td>"; // 2nd position select
         managementTable += "<td class='centerTD' id='pos3SelectCell" + player.lName + "'></td>"; // 3rd position select
         managementTable += "<td class='centerTD'><span id='editBtn" + player.lName + "' class='editBtn'>📝</span></td>"; // Edit player button
-        managementTable += "<td class='centerTD' id='reorderHandle" + player.lName + "'>☰</td>" // Handle to reorder with click and drag WIP
         managementTable += "</tr>"; // end row
         counter++;
     }
@@ -99,7 +102,7 @@ const populateManagementTable = function (mRoster, battingOrder) {
     return managementTable;
 }
 
-function addEditListeners() { // Add click listeners to make the edit buttons work
+function addEditListeners() { // Edit button click listeners
     for (let p of rc) {
         // console.log(p)
         document.getElementById('editBtn' + p.lName).addEventListener('click', function () {
@@ -107,6 +110,21 @@ function addEditListeners() { // Add click listeners to make the edit buttons wo
         })
     }
 };
+
+function addReorderListeners() { // Reorder button click listeners
+    for (let p = 0; p < bo.length; p++) {
+        document.getElementsByClassName('up')[p].addEventListener('click', function () {
+            [bo[p], bo[p-1]] = [bo[p-1], bo[p]]                         // Swap index of this player and the one above
+            localStorage.setItem('battingOrder', JSON.stringify(bo));   // Save batting order
+            loadTable();                                                // Reload table immediately
+        })
+        document.getElementsByClassName('down')[p].addEventListener('click', function () {
+            [bo[p], bo[p+1]] = [bo[p+1], bo[p]]                         // Swap index of this player and the one below
+            localStorage.setItem('battingOrder', JSON.stringify(bo));
+            loadTable();
+        })
+    }
+}
 //-----------Populate Team Management Table----END----//
 
 //-----------Add Position Selectors-------START----//
@@ -123,7 +141,7 @@ const addPositionSelectors = function () {
         pos3Select.id = 'pos3Select_' + counter;
         pos3Select.className = 'pos3Select'
 
-        const pos2Null = document.createElement('option'); // Create blank options for pos 2 and 3
+        const pos2Null = document.createElement('option');      // Create blank options for pos 2 and 3
         pos2Null.value = '';
         pos2Null.textContent = '- none -';
         pos2Select.appendChild(pos2Null);
@@ -133,7 +151,7 @@ const addPositionSelectors = function () {
         pos3Select.appendChild(pos3Null);
 
         for (let key in roles) { // Loop of Roles
-            if (roles.hasOwnProperty(key)) { // Populate dropdowns with keys of "roles" object
+            if (roles.hasOwnProperty(key)) {                    // Populate dropdowns with keys of "roles" object
                 const pos1Option = document.createElement('option');
                 pos1Option.value = key;
                 pos1Option.textContent = key;
@@ -151,7 +169,7 @@ const addPositionSelectors = function () {
             }
         }
 
-        const inactive = document.createElement('option'); // Include inactive option in pos 1 selector
+        const inactive = document.createElement('option');      // Include inactive option in pos 1 selector
         inactive.value = 'Inactive';
         inactive.textContent = 'Inactive';
         pos1Select.appendChild(inactive);
@@ -163,7 +181,7 @@ const addPositionSelectors = function () {
         const targetElement3 = document.getElementById("pos3SelectCell" + p.alias);
         targetElement3.appendChild(pos3Select);
 
-        for (let key in roles) { // Set correct default selections per roster object
+        for (let key in roles) {                                // Set correct default selections according to roster object
             if (key === p.pos) pos1Select.value = p.pos;
             if (key === p.pos2) pos2Select.value = p.pos2;
             if (key === p.pos3) pos3Select.value = p.pos3;
@@ -224,17 +242,16 @@ const editPlayer = function (player) {
 function saveEdit(player, thisPlayerSkills) {
     sc[player.lName] = thisPlayerSkills;
     console.log(sc);
-    localStorage.setItem('playerSkill', JSON.stringify(sc)); // POST
+    localStorage.setItem('playerSkill', JSON.stringify(sc)); // POST skills object to localStorage with new values added
     editPlayerModal.style.display = 'none';
     editLName.value = '';
     editFName.value = '';
     skillsDiv.innerHTML = '';
 }
-
-
-
-
 //-----------Edit Player------END-----------------//
+
+//-----------Reorder Players-----START------------//
+//-----------Reorder Players-----END--------------//
 
 //-----------Add Player------START-----------------//
 //-----------Add Player------END-----------------//
@@ -251,6 +268,7 @@ const loadTable = function () {
         mgmtTableToHTML("managePlayersDiv", managementTableDOM);
         addPositionSelectors();
         addEditListeners();
+        addReorderListeners();
     }
 };
 document.addEventListener('DOMContentLoaded', loadTable());
