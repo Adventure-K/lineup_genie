@@ -40,6 +40,9 @@ import { battingOrder as defaultBattingOrder } from './teamData.js';
 const roster = JSON.parse(localStorage.getItem('roster'));				// GET
 const playerSkill = JSON.parse(localStorage.getItem('playerSkill'));	// GET
 const battingOrder = JSON.parse(localStorage.getItem('battingOrder'));	// GET
+if (roster === null || playerSkill === null || battingOrder === null) {
+	alert("Team info missing! Please go to Manage Team to add missing info.")
+}
 
 /* ----------------  Determine Attendance. Assign Batting Order. Assign Role (Primary Position). ----START----------------------*/
 //some basic info:

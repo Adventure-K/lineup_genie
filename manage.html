@@ -35,10 +35,26 @@
         <div class="modal-content">
             <span class="close">&times;</span>
             <h2>Edit Player</h2>
+            <hr>
             <input type="text" id="editFName">
             <input type="text" id="editLName">
             <div id="editSkills"></div>
             <button id="editSaveBtn">Save</button>
+            <button id="deletePlayerBtn">Delete Player</button>
+        </div>
+    </div>
+
+    <div id="addModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Add Player</h2>
+            <hr>
+            <input type="text" id="addFName" placeholder="First Name" required>
+            <input type="text" id="addLName" placeholder="Last Name" required>
+            <div id="addPosDiv"></div>
+            <div id="addSkills"></div>
+            <button id="addSaveBtn">Save Player</button>
+            <span id="errorText" class="error-message" style="display: none;"></span>
         </div>
     </div>
 

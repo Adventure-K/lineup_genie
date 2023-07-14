@@ -3,27 +3,44 @@ import { roster as defaultRoster } from './teamData.js';
 import { playerSkill as defaultSkills } from './teamData.js';
 import { battingOrder as defaultBattingOrder } from './teamData.js';
 
-const rc = JSON.parse(localStorage.getItem('roster'));          // GET
-const sc = JSON.parse(localStorage.getItem('playerSkill'));     // GET
-const bo = JSON.parse(localStorage.getItem('battingOrder'));    // GET
-window.rc = rc; // This line is required to access the rc value in the console from a JS file loaded as a module
+const rc = JSON.parse(localStorage.getItem('roster'));          // GET roster array
+const sc = JSON.parse(localStorage.getItem('playerSkill'));     // GET player skills object
+const bo = JSON.parse(localStorage.getItem('battingOrder'));    // GET batting order array
+window.rc = rc; // This line is required to access the value in the console from a JS file loaded as a module. Good for debug
 window.sc = sc;
 window.bo = bo;
 
 //----------Global Variables & Event Listeners---------------//
-const closeBtn = document.getElementsByClassName('close')[0];
+const closeEditBtn = document.getElementsByClassName('close')[0];
+const closeAddBtn = document.getElementsByClassName('close')[1];
 const editSaveBtn = document.getElementById('editSaveBtn');
 const generateLineupBtn = document.getElementById('generateLineupBtn')
 const editPlayerModal = document.getElementById('editModal');
+const addPlayerModal = document.getElementById('addModal');
 const skillsDiv = document.getElementById('editSkills');
+const addSkills = document.getElementById('addSkills')
 const editLName = document.getElementById('editLName');
 const editFName = document.getElementById('editFName');
+const deletePlayerBtn = document.getElementById('deletePlayerBtn');
+const addPlayerBtn = document.getElementById('addPlayerBtn');
+const addPosDiv = document.getElementById('addPosDiv');
+const errorText = document.getElementById("errorText");
 
-closeBtn.addEventListener('click', function () {
+addPlayerBtn.addEventListener('click', function () {
+    addPlayer();
+})
+
+closeEditBtn.addEventListener('click', function () {
     editPlayerModal.style.display = 'none';
     editLName.value = '';
     editFName.value = '';
     skillsDiv.innerHTML = '';
+})
+
+closeAddBtn.addEventListener('click', function () {
+    addPlayerModal.style.display = 'none';
+    addPosDiv.innerHTML = '';
+    addSkills.innerHTML = '';
 })
 
 generateLineupBtn.addEventListener('click', function () {
@@ -67,7 +84,7 @@ generateLineupBtn.addEventListener('click', function () {
     // console.log('pos 3 ', pos3Data);
     console.log(rc)
     localStorage.setItem('roster', JSON.stringify(rc));     // POST new pos selections to localStorage roster
-    window.location.href = "SLM_v2.html"                    // Load generator page
+    window.location.href = "SLM_v2.html"                    // Push user to generator page
 })
 
 //-----------Populate Team Management Table----START----//
@@ -91,10 +108,10 @@ const populateManagementTable = function (mRoster, battingOrder) {
             managementTable += "<tr><td class='centerTD'><span class='up'>⬆️</span> <span class='down'>⬇️</span></td>"; 
         }
         managementTable += "<td>" + (player.lName.toUpperCase()) + ", " + player.fName + "</td>"; // Player name
-        managementTable += "<td class='centerTD' id='pos1SelectCell" + player.lName + "'></td>"; // Main position select
-        managementTable += "<td class='centerTD' id='pos2SelectCell" + player.lName + "'></td>"; // 2nd position select
-        managementTable += "<td class='centerTD' id='pos3SelectCell" + player.lName + "'></td>"; // 3rd position select
-        managementTable += "<td class='centerTD'><span id='editBtn" + player.lName + "' class='editBtn'>📝</span></td>"; // Edit player button
+        managementTable += "<td class='centerTD' id='pos1SelectCell" + player.alias + "'></td>"; // Main position select
+        managementTable += "<td class='centerTD' id='pos2SelectCell" + player.alias + "'></td>"; // 2nd position select
+        managementTable += "<td class='centerTD' id='pos3SelectCell" + player.alias + "'></td>"; // 3rd position select
+        managementTable += "<td class='centerTD'><span id='editBtn" + player.alias + "' class='editBtn'>📝</span></td>"; // Edit player button
         managementTable += "</tr>"; // end row
         counter++;
     }
@@ -105,7 +122,7 @@ const populateManagementTable = function (mRoster, battingOrder) {
 function addEditListeners() { // Edit button click listeners
     for (let p of rc) {
         // console.log(p)
-        document.getElementById('editBtn' + p.lName).addEventListener('click', function () {
+        document.getElementById('editBtn' + p.alias).addEventListener('click', function () {
             editPlayer(p); // This is wrapped in another, anonymous function because when you tried to pass it as an argument with its own parameters it broke the hell out of everything
         })
     }
@@ -127,7 +144,7 @@ function addReorderListeners() { // Reorder button click listeners
 }
 //-----------Populate Team Management Table----END----//
 
-//-----------Add Position Selectors-------START----//
+//-----------Create Position Selectors: MANAGEMENT-------START----//
 const addPositionSelectors = function () {
     let counter = 0; // Used to generate unique element IDs
     for (let p of rc) { // Loop of Players (Table rows)
@@ -189,7 +206,7 @@ const addPositionSelectors = function () {
         counter++;
     }
 };
-//-----------Add Position Selectors-------END------//
+//-----------Create Position Selectors: MANAGEMENT-------END------//
 
 
 //-----------Edit Player------START-----------------//
@@ -199,7 +216,7 @@ const editPlayer = function (player) {
     editFName.value = player.fName;
     editPlayerModal.style.display = 'block';
     // Skill sliders
-    const thisPlayerSkills = sc[player.lName];
+    const thisPlayerSkills = sc[player.alias];
     console.log('current player\'s skills: ', thisPlayerSkills)
     for (let [key, value] of Object.entries(thisPlayerSkills)) {
         skillsDiv.innerHTML += '<span>' + key + '</span>' // Slider label
@@ -237,10 +254,13 @@ const editPlayer = function (player) {
     editSaveBtn.addEventListener('click', function () {
         saveEdit(player, thisPlayerSkills);
     })
+    deletePlayerBtn.addEventListener('click', function () {
+        deletePlayer(player);
+    })
 }
 
 function saveEdit(player, thisPlayerSkills) {
-    sc[player.lName] = thisPlayerSkills;
+    sc[player.alias] = thisPlayerSkills;
     console.log(sc);
     localStorage.setItem('playerSkill', JSON.stringify(sc)); // POST skills object to localStorage with new values added
     editPlayerModal.style.display = 'none';
@@ -248,12 +268,102 @@ function saveEdit(player, thisPlayerSkills) {
     editFName.value = '';
     skillsDiv.innerHTML = '';
 }
+
+function deletePlayer (player) {
+// WIP
+}
 //-----------Edit Player------END-----------------//
 
 //-----------Reorder Players-----START------------//
 //-----------Reorder Players-----END--------------//
 
 //-----------Add Player------START-----------------//
+function addPlayer() {
+    addFName.value = '';
+    addLName.value = '';
+    const addPos1 = document.createElement('select');    // Generate position selection dropdowns
+    addPos1.id = 'addPos1';                              
+    addPos1.className = 'addPos';                        
+    const addPos2 = document.createElement('select');
+    addPos2.id = 'addPos2';
+    addPos2.className = 'addPos';
+    const addPos3 = document.createElement('select');
+    addPos3.id = 'addPos3';
+    addPos3.className = 'addPos';
+
+    for (let key in roles) { 
+        if (roles.hasOwnProperty(key)) {                    // Populate dropdowns with keys of "roles" object
+            const pos1Option = document.createElement('option');
+            pos1Option.value = key;
+            pos1Option.textContent = key;
+            addPos1.appendChild(pos1Option);
+
+            const pos2Option = document.createElement('option');
+            pos2Option.value = key;
+            pos2Option.textContent = key;
+            addPos2.appendChild(pos2Option);
+
+            const pos3Option = document.createElement('option');
+            pos3Option.value = key;
+            pos3Option.textContent = key;
+            addPos3.appendChild(pos3Option);
+        }
+    }
+
+    const pos2Null = document.createElement('option');      // Create blank options for pos 2 and 3
+    pos2Null.value = '';
+    pos2Null.textContent = '- none -';
+    addPos2.appendChild(pos2Null);
+    const pos3Null = document.createElement('option');
+    pos3Null.value = '';
+    pos3Null.textContent = '- none -';
+    addPos3.appendChild(pos3Null);
+    const inactive = document.createElement('option');      // Include inactive option in pos 1 selector
+    inactive.value = 'Inactive';
+    inactive.textContent = 'Inactive';
+    addPos1.appendChild(inactive);
+    addPosDiv.appendChild(addPos1);                         // Draw dropdowns
+    addPosDiv.appendChild(addPos2);
+    addPosDiv.appendChild(addPos3);
+
+
+
+    addSaveBtn.addEventListener('click', function () {
+        saveNewPlayer();
+    })
+
+    addPlayerModal.style.display = 'block'
+}
+
+function saveNewPlayer() {
+    // INPUT VALIDATION
+    if (!addFName.value) {alert("Please enter a first name."); return;}    // Require first name
+    if (!addLName.value) {alert("Please enter a last name."); return;}     // Require last name
+    addFName.value = addFName.value.replace(/ /g, "");                     // Remove any spaces
+    addLName.value = addLName.value.replace(/ /g, "");
+    if (!/^[a-zA-Z]+$/.test(addFName.value) || !/^[a-zA-Z]+$/.test(addLName.value)) { // Reject if non-letter chars found
+        errorText.textContent = "Please enter alphabetic characters only.";
+        errorText.style.display = "inline";
+        return;
+    } else {
+        errorText.textContent = "";
+        errorText.style.display = "none";
+    }
+    addFName.value = addFName.value.charAt(0).toUpperCase() + addFName.value.slice(1).toLowerCase(); // Set input to Proper Noun Case
+    addLName.value = addLName.value.charAt(0).toUpperCase() + addLName.value.slice(1).toLowerCase();
+    rc.forEach(player => {
+        if(player.alias === addLName.value + addFName.value) {                      // Prevent exact same name to keep IDs unique
+            errorText.textContent = "Player " + addFName.value + " " + addLName.value + " already exists.";
+            errorText.style.display = "inline"; 
+        } else {
+            errorText.textContent = "";
+            errorText.style.display = "none";
+        }
+    })
+
+    let newPlayer = {};            // To be added to roster array. Includes name and positions.
+    let newPlayerSkills = {};      // To be added to playerSkills object.
+}
 //-----------Add Player------END-----------------//
 
 //-----------Print Team Management Form----START----//

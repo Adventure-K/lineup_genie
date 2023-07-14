@@ -1,4 +1,5 @@
-#editModal {
+#editModal,
+#addModal {
     display: none;
 }
 
@@ -40,4 +41,12 @@
 .up,
 .down {
     cursor: pointer;
+}
+
+.input-error {
+    border: 2px solid red;
+}
+
+.error-message {
+    color: red;
 }
