@@ -21,6 +21,8 @@ const skillsDiv = document.getElementById('editSkills');
 const addSkills = document.getElementById('addSkills')
 const editLName = document.getElementById('editLName');
 const editFName = document.getElementById('editFName');
+const addFName = document.getElementById('addFName');
+const addLName = document.getElementById('addLName');
 const deletePlayerBtn = document.getElementById('deletePlayerBtn');
 const addPlayerBtn = document.getElementById('addPlayerBtn');
 const addPosDiv = document.getElementById('addPosDiv');
@@ -105,7 +107,7 @@ const populateManagementTable = function (mRoster, battingOrder) {
         } else if (counter === battingOrder.length - 1) {
             managementTable += "<tr><td class='centerTD'><span class='up'>⬆️</span> <span class='down' style='display:none;'>⬇️</span></td>"; // Conditional render for first and last rows
         } else {
-            managementTable += "<tr><td class='centerTD'><span class='up'>⬆️</span> <span class='down'>⬇️</span></td>"; 
+            managementTable += "<tr><td class='centerTD'><span class='up'>⬆️</span> <span class='down'>⬇️</span></td>";
         }
         managementTable += "<td>" + (player.lName.toUpperCase()) + ", " + player.fName + "</td>"; // Player name
         managementTable += "<td class='centerTD' id='pos1SelectCell" + player.alias + "'></td>"; // Main position select
@@ -131,12 +133,12 @@ function addEditListeners() { // Edit button click listeners
 function addReorderListeners() { // Reorder button click listeners
     for (let p = 0; p < bo.length; p++) {
         document.getElementsByClassName('up')[p].addEventListener('click', function () {
-            [bo[p], bo[p-1]] = [bo[p-1], bo[p]]                         // Swap index of this player and the one above
+            [bo[p], bo[p - 1]] = [bo[p - 1], bo[p]]                         // Swap index of this player and the one above
             localStorage.setItem('battingOrder', JSON.stringify(bo));   // Save batting order
             loadTable();                                                // Reload table immediately
         })
         document.getElementsByClassName('down')[p].addEventListener('click', function () {
-            [bo[p], bo[p+1]] = [bo[p+1], bo[p]]                         // Swap index of this player and the one below
+            [bo[p], bo[p + 1]] = [bo[p + 1], bo[p]]                         // Swap index of this player and the one below
             localStorage.setItem('battingOrder', JSON.stringify(bo));
             loadTable();
         })
@@ -269,8 +271,8 @@ function saveEdit(player, thisPlayerSkills) {
     skillsDiv.innerHTML = '';
 }
 
-function deletePlayer (player) {
-// WIP
+function deletePlayer(player) {
+    // WIP
 }
 //-----------Edit Player------END-----------------//
 
@@ -282,8 +284,8 @@ function addPlayer() {
     addFName.value = '';
     addLName.value = '';
     const addPos1 = document.createElement('select');    // Generate position selection dropdowns
-    addPos1.id = 'addPos1';                              
-    addPos1.className = 'addPos';                        
+    addPos1.id = 'addPos1';
+    addPos1.className = 'addPos';
     const addPos2 = document.createElement('select');
     addPos2.id = 'addPos2';
     addPos2.className = 'addPos';
@@ -291,7 +293,7 @@ function addPlayer() {
     addPos3.id = 'addPos3';
     addPos3.className = 'addPos';
 
-    for (let key in roles) { 
+    for (let key in roles) {
         if (roles.hasOwnProperty(key)) {                    // Populate dropdowns with keys of "roles" object
             const pos1Option = document.createElement('option');
             pos1Option.value = key;
@@ -325,20 +327,73 @@ function addPlayer() {
     addPosDiv.appendChild(addPos1);                         // Draw dropdowns
     addPosDiv.appendChild(addPos2);
     addPosDiv.appendChild(addPos3);
+    addPos1.value = '';                                     // Some default values
+    addPos2.value = '';
+    addPos3.value = '';
 
+    // Put pos choices in one obj to props to save fn
+    const newPlayerPos = {
+        'pos': '',
+        'pos2': '',
+        'pos3': ''
+    }
 
+    // Input listeners to update pos object. 
+    addPos1.addEventListener('input', function () {
+        newPlayerPos['pos'] = addPos1.value;
+    })
+    addPos2.addEventListener('input', function () {
+        newPlayerPos['pos2'] = addPos2.value;
+    })
+    addPos3.addEventListener('input', function () {
+        newPlayerPos['pos3'] = addPos3.value;
+    })
+
+    const newSkillObj = { 'P': 50, 'C': 50, '1B': 50, '2B': 50, '3B': 50, 'SS': 50, 'LF': 50, 'LCF': 50, 'RCF': 50, 'RF': 50 }
+
+    for (let [key, value] of Object.entries(newSkillObj)) { // Add skill sliders
+        addSkills.innerHTML += '<span>' + key + '</span>' // Slider label
+        addSkills.innerHTML += '<input class="skillSlider" id="' + key + '" type="range" min="1" max="100" value="' + value + '">' // Slider
+        addSkills.innerHTML += '<input type="number" class="curVal" min="1" max="100" value=' + value + '><br>' // Current value display (editable)
+    }
+
+    // Auto-update values on user input
+    const sliders = document.getElementsByClassName('skillSlider');
+    const curVals = document.getElementsByClassName('curVal');
+    for (let i = 0; i < sliders.length; i++) {
+        sliders[i].addEventListener('input', function () {
+            // console.log(sliders[i].id, sliders[i].value)
+            curVals[i].value = sliders[i].value;
+            const currentSkill = sliders[i].id;
+            newSkillObj[currentSkill] = parseInt(sliders[i].value);
+        })
+    }
+    // & Limit numerical inputs to valid values
+    for (let i = 0; i < curVals.length; i++) {
+        curVals[i].addEventListener('input', function () {
+            // console.log(sliders[i].id, curVals[i].value)
+            if (curVals[i].value > 100) {
+                curVals[i].value = 100;
+            } else if (curVals[i].value < 1) {
+                curVals[i].value = 1;
+            }
+            sliders[i].value = curVals[i].value;
+            const currentSkill = sliders[i].id;
+            newSkillObj[currentSkill] = parseInt(curVals[i].value);
+        })
+    }
 
     addSaveBtn.addEventListener('click', function () {
-        saveNewPlayer();
+        saveNewPlayer(newPlayerPos, newSkillObj);
     })
 
     addPlayerModal.style.display = 'block'
 }
 
-function saveNewPlayer() {
+function saveNewPlayer(posObj, skillObj) {
     // INPUT VALIDATION
-    if (!addFName.value) {alert("Please enter a first name."); return;}    // Require first name
-    if (!addLName.value) {alert("Please enter a last name."); return;}     // Require last name
+    if (!addFName.value) { alert("Please enter a first name."); return; }    // Require first name
+    if (!addLName.value) { alert("Please enter a last name."); return; }     // Require last name
     addFName.value = addFName.value.replace(/ /g, "");                     // Remove any spaces
     addLName.value = addLName.value.replace(/ /g, "");
     if (!/^[a-zA-Z]+$/.test(addFName.value) || !/^[a-zA-Z]+$/.test(addLName.value)) { // Reject if non-letter chars found
@@ -352,17 +407,48 @@ function saveNewPlayer() {
     addFName.value = addFName.value.charAt(0).toUpperCase() + addFName.value.slice(1).toLowerCase(); // Set input to Proper Noun Case
     addLName.value = addLName.value.charAt(0).toUpperCase() + addLName.value.slice(1).toLowerCase();
     rc.forEach(player => {
-        if(player.alias === addLName.value + addFName.value) {                      // Prevent exact same name to keep IDs unique
+        if (player.alias === addLName.value + addFName.value) {       // Prevent exact same name to keep IDs unique
             errorText.textContent = "Player " + addFName.value + " " + addLName.value + " already exists.";
-            errorText.style.display = "inline"; 
+            errorText.style.display = "inline";
+            return;
         } else {
             errorText.textContent = "";
             errorText.style.display = "none";
         }
     })
 
-    let newPlayer = {};            // To be added to roster array. Includes name and positions.
-    let newPlayerSkills = {};      // To be added to playerSkills object.
+    if (posObj['pos'] === '') {  // Require primary position
+        errorText.textContent = "Please select a primary position.";
+        errorText.style.display = "inline";
+        return;
+    } else {
+        errorText.textContent = "";
+        errorText.style.display = "none";
+    }
+    // END VALIDATION
+    // Create final playerObj and add other required properties
+    const playerObj = {};
+    playerObj['alias'] = addLName.value + addFName.value;
+    playerObj['pos'] = posObj['pos'];
+    playerObj['fName'] = addFName.value;
+    playerObj['lName'] = addLName.value;
+    playerObj['pos2'] = posObj['pos2'];
+    playerObj['pos3'] = posObj['pos3'];
+    playerObj['sortOrderClass'] = '1';
+
+    console.log('playerObj: ', playerObj)
+    console.log('skillObj: ', skillObj)
+
+    rc.push(playerObj);                 // Append new data to main data objects
+    sc[playerObj['alias']] = skillObj;
+    bo.push(playerObj['alias']);
+
+    localStorage.setItem('rosterTest', JSON.stringify(rc));     // Upload updated data objects to localStorage
+    localStorage.setItem('playerSkill', JSON.stringify(sc));
+    addPlayerModal.style.display = 'none'; // Close and blank add player dialog
+    addPosDiv.innerHTML = '';
+    addSkills.innerHTML = '';
+    loadTable(); // Reload table
 }
 //-----------Add Player------END-----------------//
 
