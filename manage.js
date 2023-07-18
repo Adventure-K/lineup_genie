@@ -81,9 +81,6 @@ generateLineupBtn.addEventListener('click', function () {
             player.pos3 = pos3Data[alias]
         }
     }
-    // console.log('pos 1 ', pos1Data);
-    // console.log('pos 2 ', pos2Data);
-    // console.log('pos 3 ', pos3Data);
     console.log(rc)
     localStorage.setItem('roster', JSON.stringify(rc));     // POST new pos selections to localStorage roster
     window.location.href = "SLM_v2.html"                    // Push user to generator page
@@ -146,7 +143,7 @@ function addReorderListeners() { // Reorder button click listeners
 }
 //-----------Populate Team Management Table----END----//
 
-//-----------Create Position Selectors: MANAGEMENT-------START----//
+//-----------Create Position Selectors-------START----//
 const addPositionSelectors = function () {
     let counter = 0; // Used to generate unique element IDs
     for (let p of rc) { // Loop of Players (Table rows)
@@ -208,7 +205,7 @@ const addPositionSelectors = function () {
         counter++;
     }
 };
-//-----------Create Position Selectors: MANAGEMENT-------END------//
+//-----------Create Position Selectors-------END------//
 
 
 //-----------Edit Player------START-----------------//
@@ -275,9 +272,6 @@ function deletePlayer(player) {
     // WIP
 }
 //-----------Edit Player------END-----------------//
-
-//-----------Reorder Players-----START------------//
-//-----------Reorder Players-----END--------------//
 
 //-----------Add Player------START-----------------//
 function addPlayer() {
@@ -392,11 +386,17 @@ function addPlayer() {
 
 function saveNewPlayer(posObj, skillObj) {
     // INPUT VALIDATION
-    if (!addFName.value) { alert("Please enter a first name."); return; }    // Require first name
-    if (!addLName.value) { alert("Please enter a last name."); return; }     // Require last name
-    addFName.value = addFName.value.replace(/ /g, "");                     // Remove any spaces
+    if (!addFName.value || !addLName.value ) {    // Require first & last name
+        errorText.textContent = "Please enter a first and last name.";
+        errorText.style.display = "inline";
+        return;
+    } else {
+        errorText.textContent = "";
+        errorText.style.display = "none";
+    }
+    addFName.value = addFName.value.replace(/ /g, "");    // Remove any spaces
     addLName.value = addLName.value.replace(/ /g, "");
-    if (!/^[a-zA-Z]+$/.test(addFName.value) || !/^[a-zA-Z]+$/.test(addLName.value)) { // Reject if non-letter chars found
+    if (!/^[a-zA-Z]+$/.test(addFName.value) || !/^[a-zA-Z]+$/.test(addLName.value)) {   // Reject if non-letter chars found
         errorText.textContent = "Please enter alphabetic characters only.";
         errorText.style.display = "inline";
         return;
@@ -428,27 +428,28 @@ function saveNewPlayer(posObj, skillObj) {
     // END VALIDATION
     // Create final playerObj and add other required properties
     const playerObj = {};
-    playerObj['alias'] = addLName.value + addFName.value;
+    playerObj['alias'] = addLName.value + addFName.value;       // Unique ID for roster object
     playerObj['pos'] = posObj['pos'];
     playerObj['fName'] = addFName.value;
     playerObj['lName'] = addLName.value;
     playerObj['pos2'] = posObj['pos2'];
     playerObj['pos3'] = posObj['pos3'];
-    playerObj['sortOrderClass'] = '1';
+    playerObj['sortOrderClass'] = '1';                          // Secret Lanser esoterica
 
     console.log('playerObj: ', playerObj)
     console.log('skillObj: ', skillObj)
 
-    rc.push(playerObj);                 // Append new data to main data objects
+    rc.push(playerObj);                                         // Append new data to main data objects
     sc[playerObj['alias']] = skillObj;
     bo.push(playerObj['alias']);
 
-    localStorage.setItem('rosterTest', JSON.stringify(rc));     // Upload updated data objects to localStorage
+    localStorage.setItem('roster', JSON.stringify(rc));         // Upload updated data objects to localStorage
     localStorage.setItem('playerSkill', JSON.stringify(sc));
-    addPlayerModal.style.display = 'none'; // Close and blank add player dialog
+    localStorage.setItem('battingOrder', JSON.stringify(bo));
+    addPlayerModal.style.display = 'none';                      // Close and blank add player dialog
     addPosDiv.innerHTML = '';
     addSkills.innerHTML = '';
-    loadTable(); // Reload table
+    loadTable();                                                // Reload table
 }
 //-----------Add Player------END-----------------//
 
@@ -476,11 +477,13 @@ const loadDefaultBtn = document.getElementById('defaultData');
 loadDefaultBtn.addEventListener('click', function () {
     if (confirm("THIS WILL OVERRIDE ANY SAVED PLAYER DATA. PROCEED?")) {
         console.log('DEFAULT DATA')
+        localStorage.clear();
         localStorage.setItem('roster', JSON.stringify(defaultRoster));              // POST
         localStorage.setItem('playerSkill', JSON.stringify(defaultSkills));         // POST
         localStorage.setItem('battingOrder', JSON.stringify(defaultBattingOrder));  // POST
         localStorage.setItem('roles', JSON.stringify(roles));                       // POST
         loadTable();
+        location.reload();
     }
 });
 //-----------Invoke Default Data----END----//
