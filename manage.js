@@ -274,9 +274,9 @@ function saveEdit(player, thisPlayerSkills, oldFName, oldLName) {
             editErrorText.textContent = "";
             editErrorText.style.display = "none";
         }
-        editFName.value = editFName.value.replace(/ /g, "");    // Remove any spaces
-        editLName.value = editLName.value.replace(/ /g, "");
-        if (!/^[a-zA-Z]+$/.test(editFName.value) || !/^[a-zA-Z]+$/.test(editLName.value)) {   // Reject if non-letter chars found
+        editFName.value = editFName.value.trim();    // Remove any extraneous spaces
+        editLName.value = editLName.value.trim();
+        if (!/^[a-zA-Z-]+$/.test(editFName.value) || !/^[a-zA-Z-]+$/.test(editLName.value)) {   // Reject if non-letter chars found
             editErrorText.textContent = "Please enter alphabetic characters only.";
             editErrorText.style.display = "inline";
             return;
@@ -284,8 +284,8 @@ function saveEdit(player, thisPlayerSkills, oldFName, oldLName) {
             editErrorText.textContent = "";
             editErrorText.style.display = "none";
         }
-        editFName.value = editFName.value.charAt(0).toUpperCase() + editFName.value.slice(1).toLowerCase(); // Set input to Proper Noun Case
-        editLName.value = editLName.value.charAt(0).toUpperCase() + editLName.value.slice(1).toLowerCase();
+        editFName.value.charAt(0).toUpperCase(); // Capitalize 1st letter
+        editLName.value.charAt(0).toUpperCase();
         rc.forEach(entry => {
             if (entry.alias === editLName.value + editFName.value) {       // Prevent exact same name to keep IDs unique
                 editErrorText.textContent = "Player " + editFName.value + " " + editLName.value + " already exists.";
@@ -480,9 +480,9 @@ function saveNewPlayer(posObj, skillObj) {
         addErrorText.textContent = "";
         addErrorText.style.display = "none";
     }
-    addFName.value = addFName.value.replace(/ /g, "");    // Remove any spaces
-    addLName.value = addLName.value.replace(/ /g, "");
-    if (!/^[a-zA-Z]+$/.test(addFName.value) || !/^[a-zA-Z]+$/.test(addLName.value)) {   // Reject if non-letter chars found
+    addFName.value = addFName.value.trim();    // Remove any extraneous spaces
+    addLName.value = addLName.value.trim();
+    if (!/^[a-zA-Z-]+$/.test(addFName.value) || !/^[a-zA-Z-]+$/.test(addLName.value)) {   // Reject if non-letter chars found. Hyphens excepted
         addErrorText.textContent = "Please enter alphabetic characters only.";
         addErrorText.style.display = "inline";
         return;
@@ -490,8 +490,8 @@ function saveNewPlayer(posObj, skillObj) {
         addErrorText.textContent = "";
         addErrorText.style.display = "none";
     }
-    addFName.value = addFName.value.charAt(0).toUpperCase() + addFName.value.slice(1).toLowerCase(); // Set input to Proper Noun Case
-    addLName.value = addLName.value.charAt(0).toUpperCase() + addLName.value.slice(1).toLowerCase();
+    addFName.value.charAt(0).toUpperCase();
+    addLName.value.charAt(0).toUpperCase();
     rc.forEach(player => {
         if (player.alias === addLName.value + addFName.value) {       // Prevent exact same name to keep IDs unique
             addErrorText.textContent = "Player " + addFName.value + " " + addLName.value + " already exists.";
