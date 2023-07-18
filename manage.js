@@ -39,12 +39,14 @@ closeEditBtn.addEventListener('click', function () {
     editLName.value = '';
     editFName.value = '';
     skillsDiv.innerHTML = '';
+    editErrorText.textContent = "";
 })
 
 closeAddBtn.addEventListener('click', function () {
     addPlayerModal.style.display = 'none';
     addPosDiv.innerHTML = '';
     addSkills.innerHTML = '';
+    addErrorText.textContent = "";
 })
 
 generateLineupBtn.addEventListener('click', function () {
@@ -217,6 +219,7 @@ const editPlayer = function (player) {
     const oldLName = player.lName;
     editLName.value = player.lName;
     editFName.value = player.fName;
+    editErrorText.textContent = "";
     editPlayerModal.style.display = 'block';
     // Skill sliders
     const thisPlayerSkills = sc[player.alias];
@@ -329,6 +332,7 @@ function saveEdit(player, thisPlayerSkills, oldFName, oldLName) {
     editLName.value = '';
     editFName.value = '';
     skillsDiv.innerHTML = '';
+    editErrorText.textContent = "";
     loadTable();
 
 }
@@ -361,6 +365,7 @@ function deletePlayer(player) {
 
 //-----------Add Player------START-----------------//
 function addPlayer() {
+    addErrorText.textContent = "";
     addFName.value = '';
     addLName.value = '';
     const addPos1 = document.createElement('select');    // Generate position selection dropdowns
@@ -537,6 +542,7 @@ function saveNewPlayer(posObj, skillObj) {
     addSkills.innerHTML = '';
     addFName.innerHTML = '';
     addLName.innerHTML = '';
+    addErrorText.textContent = "";
     loadTable();                                                // Reload table
 }
 //-----------Add Player------END-----------------//
