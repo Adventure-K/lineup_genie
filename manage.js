@@ -93,7 +93,7 @@ const populateManagementTable = function (mRoster, battingOrder) {
     console.log('battingOrder: ', battingOrder)
 
     // Headers
-    managementTable += "<tr><th>Reorder</th><th>Player</th><th>Pos 1</th><th>Pos 2</th><th>Pos 3</th><th>Edit Skills</th></tr>";
+    managementTable += "<tr><th>Reorder</th><th>Player</th><th>Pos 1</th><th>Pos 2</th><th>Pos 3</th><th>Edit</th></tr>";
 
     // Data
     let counter = 0;
@@ -129,10 +129,10 @@ function addEditListeners() { // Edit button click listeners
 
 function addReorderListeners() { // Reorder button click listeners
     for (let p = 0; p < bo.length; p++) {
-        document.getElementsByClassName('up')[p].addEventListener('click', function () {
+        document.getElementsByClassName('up')[p].addEventListener('click', function () { // This is an array of all the up buttons. Their indices correspond to the indices of bo (the batting order)
             [bo[p], bo[p - 1]] = [bo[p - 1], bo[p]]                         // Swap index of this player and the one above
-            localStorage.setItem('battingOrder', JSON.stringify(bo));   // Save batting order
-            loadTable();                                                // Reload table immediately
+            localStorage.setItem('battingOrder', JSON.stringify(bo));       // Save batting order
+            loadTable();                                                    // Reload table immediately
         })
         document.getElementsByClassName('down')[p].addEventListener('click', function () {
             [bo[p], bo[p + 1]] = [bo[p + 1], bo[p]]                         // Swap index of this player and the one below
@@ -269,7 +269,23 @@ function saveEdit(player, thisPlayerSkills) {
 }
 
 function deletePlayer(player) {
-    // WIP
+    if (confirm("Delete player from memory. Proceed?")) {
+        const playerIndex = rc.indexOf(player);                             // Remove from rc, array of objects. props is already the object in question
+        rc.splice(playerIndex, 1)
+        const boElement = bo.find(obj => obj.alias === player.alias);       // Remove from bo, array of strings, using identifier (alias)
+        const boIndex = bo.indexOf(boElement);
+        bo.splice(boIndex, 1);
+        const scProperty = player.alias;                                    // Remove from sc, object of objects, also using alias (key of property in this case)
+        delete sc[scProperty];                                                  // NOTE: When the property's name is a variable in the function, must use square brackets, not dot
+        localStorage.setItem('roster', JSON.stringify(rc))                  // Save changes to main data objects
+        localStorage.setItem('battingOrder', JSON.stringify(bo))
+        localStorage.setItem('playerSkill', JSON.stringify(sc))
+        editPlayerModal.style.display = 'none';                             // Close and blank edit player modal
+        editLName.value = '';
+        editFName.value = '';
+        skillsDiv.innerHTML = '';
+        loadTable();                                                        // Reload table
+    }
 }
 //-----------Edit Player------END-----------------//
 
