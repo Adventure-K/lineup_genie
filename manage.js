@@ -26,7 +26,9 @@ const addLName = document.getElementById('addLName');
 const deletePlayerBtn = document.getElementById('deletePlayerBtn');
 const addPlayerBtn = document.getElementById('addPlayerBtn');
 const addPosDiv = document.getElementById('addPosDiv');
-const errorText = document.getElementById("errorText");
+const addErrorText = document.getElementById("addErrorText");
+const editErrorText = document.getElementById("editErrorText");
+
 
 addPlayerBtn.addEventListener('click', function () {
     addPlayer();
@@ -211,6 +213,8 @@ const addPositionSelectors = function () {
 //-----------Edit Player------START-----------------//
 const editPlayer = function (player) {
     console.log('editing ', player);
+    const oldFName = player.fName;
+    const oldLName = player.lName;
     editLName.value = player.lName;
     editFName.value = player.fName;
     editPlayerModal.style.display = 'block';
@@ -238,7 +242,6 @@ const editPlayer = function (player) {
     // & Limit numerical inputs to valid values
     for (let i = 0; i < curVals.length; i++) {
         curVals[i].addEventListener('input', function () {
-            // console.log(sliders[i].id, curVals[i].value)
             if (curVals[i].value > 100) {
                 curVals[i].value = 100;
             } else if (curVals[i].value < 1) {
@@ -251,39 +254,106 @@ const editPlayer = function (player) {
         })
     }
     editSaveBtn.addEventListener('click', function () {
-        saveEdit(player, thisPlayerSkills);
+        saveEdit(player, thisPlayerSkills, oldFName, oldLName);
     })
     deletePlayerBtn.addEventListener('click', function () {
         deletePlayer(player);
     })
 }
 
-function saveEdit(player, thisPlayerSkills) {
-    sc[player.alias] = thisPlayerSkills;
-    console.log(sc);
-    localStorage.setItem('playerSkill', JSON.stringify(sc)); // POST skills object to localStorage with new values added
+function saveEdit(player, thisPlayerSkills, oldFName, oldLName) {
+    let newName = false;
+    if (editFName.value !== oldFName || editLName.value !== oldLName) newName = true;
+    if (newName) { // Don't run validation unless name has been edited
+        // INPUT VALIDATION
+        if (!editFName.value || !editLName.value) {    // Require first & last name
+            editErrorText.textContent = "Please enter a first and last name.";
+            editErrorText.style.display = "inline";
+            return;
+        } else {
+            editErrorText.textContent = "";
+            editErrorText.style.display = "none";
+        }
+        editFName.value = editFName.value.replace(/ /g, "");    // Remove any spaces
+        editLName.value = editLName.value.replace(/ /g, "");
+        if (!/^[a-zA-Z]+$/.test(editFName.value) || !/^[a-zA-Z]+$/.test(editLName.value)) {   // Reject if non-letter chars found
+            editErrorText.textContent = "Please enter alphabetic characters only.";
+            editErrorText.style.display = "inline";
+            return;
+        } else {
+            editErrorText.textContent = "";
+            editErrorText.style.display = "none";
+        }
+        editFName.value = editFName.value.charAt(0).toUpperCase() + editFName.value.slice(1).toLowerCase(); // Set input to Proper Noun Case
+        editLName.value = editLName.value.charAt(0).toUpperCase() + editLName.value.slice(1).toLowerCase();
+        rc.forEach(entry => {
+            if (entry.alias === editLName.value + editFName.value) {       // Prevent exact same name to keep IDs unique
+                editErrorText.textContent = "Player " + editFName.value + " " + editLName.value + " already exists.";
+                editErrorText.style.display = "inline";
+                return;
+            } else {
+                editErrorText.textContent = "";
+                editErrorText.style.display = "none";
+            }
+        })
+    }
+    // END VALIDATION  
+    if (newName) {
+        console.log('batting order object: ', bo)
+        console.log('player.alias: ', player.alias)
+        const boElement = bo.find(name => name === player.alias);               // Edit batting order object with new name
+        console.log('boElement: ', boElement)
+        const boIndex = bo.indexOf(boElement);
+        console.log('boIndex: ', boIndex)
+        bo[boIndex] = editLName.value + editFName.value;
+
+        const scProperty = player.alias;                                        // Delete skills property under player's old name
+        delete sc[scProperty];
+        const newAlias = editLName.value + editFName.value;                     
+        sc[newAlias] = thisPlayerSkills;                                        // Edit playerSkills object with new values for this player under new name   
+        console.log(sc);
+        const rcIndexOfPlayer = rc.indexOf(player);                             // Edit roster object with new name
+        rc[rcIndexOfPlayer].fName = editFName.value;
+        rc[rcIndexOfPlayer].lName = editLName.value;
+        rc[rcIndexOfPlayer].alias = editLName.value + editFName.value;
+        console.log(rc);
+
+    } else {
+        sc[player.alias] = thisPlayerSkills;                                    // Edit playerSkills object with new values for this player
+        console.log(sc);
+    }
+    localStorage.setItem('battingOrder', JSON.stringify(bo));               // POST battingOrder object to localStorage with new values added
+    localStorage.setItem('roster', JSON.stringify(rc));                     // POST roster object to localStorage with new values added
+    localStorage.setItem('playerSkill', JSON.stringify(sc));                // POST skills object to localStorage with new values added
     editPlayerModal.style.display = 'none';
     editLName.value = '';
     editFName.value = '';
     skillsDiv.innerHTML = '';
+    loadTable();
+
 }
 
 function deletePlayer(player) {
     if (confirm("Delete player from memory. Proceed?")) {
         const playerIndex = rc.indexOf(player);                             // Remove from rc, array of objects. props is already the object in question
-        rc.splice(playerIndex, 1)
-        const boElement = bo.find(obj => obj.alias === player.alias);       // Remove from bo, array of strings, using identifier (alias)
+        rc.splice(playerIndex, 1);
+
+        const boElement = bo.find(name => name === player.alias);           // Remove from bo, array of strings, using identifier (alias)
         const boIndex = bo.indexOf(boElement);
         bo.splice(boIndex, 1);
+
         const scProperty = player.alias;                                    // Remove from sc, object of objects, also using alias (key of property in this case)
         delete sc[scProperty];                                                  // NOTE: When the property's name is a variable in the function, must use square brackets, not dot
-        localStorage.setItem('roster', JSON.stringify(rc))                  // Save changes to main data objects
-        localStorage.setItem('battingOrder', JSON.stringify(bo))
-        localStorage.setItem('playerSkill', JSON.stringify(sc))
+
+        localStorage.setItem('roster', JSON.stringify(rc));                 // Save changes to main data objects
+        localStorage.setItem('battingOrder', JSON.stringify(bo));
+        localStorage.setItem('playerSkill', JSON.stringify(sc));
+
         editPlayerModal.style.display = 'none';                             // Close and blank edit player modal
         editLName.value = '';
         editFName.value = '';
         skillsDiv.innerHTML = '';
+
         loadTable();                                                        // Reload table
     }
 }
@@ -402,44 +472,44 @@ function addPlayer() {
 
 function saveNewPlayer(posObj, skillObj) {
     // INPUT VALIDATION
-    if (!addFName.value || !addLName.value ) {    // Require first & last name
-        errorText.textContent = "Please enter a first and last name.";
-        errorText.style.display = "inline";
+    if (!addFName.value || !addLName.value) {    // Require first & last name
+        addErrorText.textContent = "Please enter a first and last name.";
+        addErrorText.style.display = "inline";
         return;
     } else {
-        errorText.textContent = "";
-        errorText.style.display = "none";
+        addErrorText.textContent = "";
+        addErrorText.style.display = "none";
     }
     addFName.value = addFName.value.replace(/ /g, "");    // Remove any spaces
     addLName.value = addLName.value.replace(/ /g, "");
     if (!/^[a-zA-Z]+$/.test(addFName.value) || !/^[a-zA-Z]+$/.test(addLName.value)) {   // Reject if non-letter chars found
-        errorText.textContent = "Please enter alphabetic characters only.";
-        errorText.style.display = "inline";
+        addErrorText.textContent = "Please enter alphabetic characters only.";
+        addErrorText.style.display = "inline";
         return;
     } else {
-        errorText.textContent = "";
-        errorText.style.display = "none";
+        addErrorText.textContent = "";
+        addErrorText.style.display = "none";
     }
     addFName.value = addFName.value.charAt(0).toUpperCase() + addFName.value.slice(1).toLowerCase(); // Set input to Proper Noun Case
     addLName.value = addLName.value.charAt(0).toUpperCase() + addLName.value.slice(1).toLowerCase();
     rc.forEach(player => {
         if (player.alias === addLName.value + addFName.value) {       // Prevent exact same name to keep IDs unique
-            errorText.textContent = "Player " + addFName.value + " " + addLName.value + " already exists.";
-            errorText.style.display = "inline";
+            addErrorText.textContent = "Player " + addFName.value + " " + addLName.value + " already exists.";
+            addErrorText.style.display = "inline";
             return;
         } else {
-            errorText.textContent = "";
-            errorText.style.display = "none";
+            addErrorText.textContent = "";
+            addErrorText.style.display = "none";
         }
     })
 
     if (posObj['pos'] === '') {  // Require primary position
-        errorText.textContent = "Please select a primary position.";
-        errorText.style.display = "inline";
+        addErrorText.textContent = "Please select a primary position.";
+        addErrorText.style.display = "inline";
         return;
     } else {
-        errorText.textContent = "";
-        errorText.style.display = "none";
+        addErrorText.textContent = "";
+        addErrorText.style.display = "none";
     }
     // END VALIDATION
     // Create final playerObj and add other required properties
@@ -465,6 +535,8 @@ function saveNewPlayer(posObj, skillObj) {
     addPlayerModal.style.display = 'none';                      // Close and blank add player dialog
     addPosDiv.innerHTML = '';
     addSkills.innerHTML = '';
+    addFName.innerHTML = '';
+    addLName.innerHTML = '';
     loadTable();                                                // Reload table
 }
 //-----------Add Player------END-----------------//
