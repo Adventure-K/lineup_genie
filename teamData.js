@@ -91,3 +91,5 @@ battingOrder = [
 	, 'TravisLloyd'
 	, 'MensinkMike'
 ];
+
+export let defaultRosterInactive = [];

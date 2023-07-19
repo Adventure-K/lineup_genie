@@ -2,6 +2,7 @@ import { roles } from './teamData.js';
 import { roster as defaultRoster } from './teamData.js';
 import { playerSkill as defaultSkills } from './teamData.js';
 import { battingOrder as defaultBattingOrder } from './teamData.js';
+import { defaultRosterInactive } from './teamData.js';
 
 const rc = JSON.parse(localStorage.getItem('roster'));                  // GET roster array
 const sc = JSON.parse(localStorage.getItem('playerSkill'));             // GET player skills object
@@ -141,7 +142,7 @@ function addEditListeners() { // Edit button click listeners
 function addInactiveListeners() { // Active checkbox click listeners
     for (let p of rc) {
         document.getElementById('activeBox' + p.alias).addEventListener('input', function () {
-            markInactive(p);
+            markInactive(p, sc);
         })
     }
 }
@@ -385,14 +386,56 @@ function populateInactiveTable(rci) {
         inactiveTBody.innerHTML += "<tr><td>" + (player.lName.toUpperCase()) + ", " + player.fName + "</td>"; // New row, player name
         inactiveTBody.innerHTML += "<td class='centerTD'><button id='activeButton" + player.alias + "'>Activate</button></td></tr>" // Activate button
     }
+
+    for (let p of rci) {
+        document.getElementById('activeButton' + p.alias).addEventListener('click', function () {
+            markActive(p);
+        }, { once: true })
+    }
 }
 
-function markInactive(player) {
+function markInactive(player, sc) {
     console.log('Inactive: ', player.alias)
+
+    rci.push(player);                                       // add to inactive roster
+    // const scProperty = player.alias; 
+    // sci[player['alias']] = sc[scProperty];
+
+    const playerIndex = rc.indexOf(player);                 // remove from active roster         
+    rc.splice(playerIndex, 1);
+
+    const boElement = bo.find(name => name === player.alias);
+    const boIndex = bo.indexOf(boElement);
+    bo.splice(boIndex, 1);                                  // remove from batting order
+
+    // delete sc[scProperty];                               // remove from active skill object        
+
+    localStorage.setItem('rosterInactive', JSON.stringify(rci));
+    // localStorage.setItem('playerSkillInactive', JSON.stringify(sci));
+    localStorage.setItem('roster', JSON.stringify(rc));
+    localStorage.setItem('battingOrder', JSON.stringify(bo));
+    // localStorage.setItem('playerSkill', JSON.stringify(sc));
+
+    loadTable();
 }
 
-function showInactive() {    // Show inactive table if not empty, otherwise hide. Called by loadTable
-    rci ? manageInactiveDiv.style.display = 'block' : manageInactiveDiv.style.display = 'none'
+function markActive(player) {
+    console.log('Activate: ', player);
+
+    rc.push(player);                            // add to active roster
+    const playerIndex = rci.indexOf(player);    // remove from inactive roster
+    rci.splice(playerIndex, 1);
+    bo.push(player['alias']);                   // add to batting order (last place by default)
+
+    localStorage.setItem('rosterInactive', JSON.stringify(rci));
+    localStorage.setItem('roster', JSON.stringify(rc));
+    localStorage.setItem('battingOrder', JSON.stringify(bo));
+
+    loadTable();
+}
+
+function showInactive() {    // Show inactive table if inactive roster not empty, otherwise hide. Called by loadTable
+    rci.length > 0 ? manageInactiveDiv.style.display = 'block' : manageInactiveDiv.style.display = 'none'
 }
 //-----------Manage Inactive-------END------------//
 
@@ -591,6 +634,7 @@ const loadTable = function () {
         addEditListeners();
         addReorderListeners();
         addInactiveListeners();
+        populateInactiveTable(rci);
         showInactive();
     }
 };
@@ -607,7 +651,7 @@ loadDefaultBtn.addEventListener('click', function () {
         localStorage.setItem('roster', JSON.stringify(defaultRoster));              // POST
         localStorage.setItem('playerSkill', JSON.stringify(defaultSkills));         // POST
         localStorage.setItem('battingOrder', JSON.stringify(defaultBattingOrder));  // POST
-        localStorage.setItem('rosterInactive', JSON.stringify(''));                 // POST
+        localStorage.setItem('rosterInactive', JSON.stringify(defaultRosterInactive));               // POST
         localStorage.setItem('playerSkillInactive', JSON.stringify(''));            // POST
         loadTable();
         location.reload();
