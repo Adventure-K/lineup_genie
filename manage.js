@@ -3,17 +3,21 @@ import { roster as defaultRoster } from './teamData.js';
 import { playerSkill as defaultSkills } from './teamData.js';
 import { battingOrder as defaultBattingOrder } from './teamData.js';
 
-const rc = JSON.parse(localStorage.getItem('roster'));          // GET roster array
-const sc = JSON.parse(localStorage.getItem('playerSkill'));     // GET player skills object
-const bo = JSON.parse(localStorage.getItem('battingOrder'));    // GET batting order array
+const rc = JSON.parse(localStorage.getItem('roster'));                  // GET roster array
+const sc = JSON.parse(localStorage.getItem('playerSkill'));             // GET player skills object
+const bo = JSON.parse(localStorage.getItem('battingOrder'));            // GET batting order array
+const rci = JSON.parse(localStorage.getItem('rosterInactive'));         // GET inactive roster. Inactive data for team management only
+const sci = JSON.parse(localStorage.getItem('playerSkillInactive'));    // GET inactive roster skills
 window.rc = rc; // This line is required to access the value in the console from a JS file loaded as a module. Good for debug
 window.sc = sc;
 window.bo = bo;
+window.rci = rci;
+window.sci = sci;
 
 //----------Global Variables & Event Listeners---------------//
 const closeEditBtn = document.getElementsByClassName('close')[0];
 const closeAddBtn = document.getElementsByClassName('close')[1];
-const editSaveBtn = document.getElementById('editSaveBtn'); //
+const editSaveBtn = document.getElementById('editSaveBtn'); 
 const generateLineupBtn = document.getElementById('generateLineupBtn')
 const editPlayerModal = document.getElementById('editModal');
 const addPlayerModal = document.getElementById('addModal');
@@ -23,9 +27,9 @@ const editLName = document.getElementById('editLName');
 const editFName = document.getElementById('editFName');
 const addFName = document.getElementById('addFName');
 const addLName = document.getElementById('addLName');
-const deletePlayerBtn = document.getElementById('deletePlayerBtn'); //
+const deletePlayerBtn = document.getElementById('deletePlayerBtn'); 
 const addPlayerBtn = document.getElementById('addPlayerBtn');
-const addSaveBtn = document.getElementById('addSaveBtn'); //
+const addSaveBtn = document.getElementById('addSaveBtn'); 
 const addPosDiv = document.getElementById('addPosDiv');
 const addErrorText = document.getElementById("addErrorText");
 const editErrorText = document.getElementById("editErrorText");
@@ -581,7 +585,8 @@ loadDefaultBtn.addEventListener('click', function () {
         localStorage.setItem('roster', JSON.stringify(defaultRoster));              // POST
         localStorage.setItem('playerSkill', JSON.stringify(defaultSkills));         // POST
         localStorage.setItem('battingOrder', JSON.stringify(defaultBattingOrder));  // POST
-        localStorage.setItem('roles', JSON.stringify(roles));                       // POST
+        localStorage.setItem('rosterInactive', JSON.stringify(''));                 // POST
+        localStorage.setItem('playerSkillInactive', JSON.stringify(''));            // POST
         loadTable();
         location.reload();
     }
