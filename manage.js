@@ -17,7 +17,7 @@ window.sci = sci;
 //----------Global Variables & Event Listeners---------------//
 const closeEditBtn = document.getElementsByClassName('close')[0];
 const closeAddBtn = document.getElementsByClassName('close')[1];
-const editSaveBtn = document.getElementById('editSaveBtn'); 
+const editSaveBtn = document.getElementById('editSaveBtn');
 const generateLineupBtn = document.getElementById('generateLineupBtn')
 const editPlayerModal = document.getElementById('editModal');
 const addPlayerModal = document.getElementById('addModal');
@@ -27,12 +27,14 @@ const editLName = document.getElementById('editLName');
 const editFName = document.getElementById('editFName');
 const addFName = document.getElementById('addFName');
 const addLName = document.getElementById('addLName');
-const deletePlayerBtn = document.getElementById('deletePlayerBtn'); 
+const deletePlayerBtn = document.getElementById('deletePlayerBtn');
 const addPlayerBtn = document.getElementById('addPlayerBtn');
-const addSaveBtn = document.getElementById('addSaveBtn'); 
+const addSaveBtn = document.getElementById('addSaveBtn');
 const addPosDiv = document.getElementById('addPosDiv');
 const addErrorText = document.getElementById("addErrorText");
 const editErrorText = document.getElementById("editErrorText");
+const manageInactiveDiv = document.getElementById('manageInactiveDiv');
+const inactiveTBody = document.getElementById('inactiveTBody');
 
 addPlayerBtn.addEventListener('click', function () {
     addPlayer();
@@ -101,7 +103,7 @@ const populateManagementTable = function (mRoster, battingOrder) {
     console.log('battingOrder: ', battingOrder)
 
     // Headers
-    managementTable += "<tr><th>Reorder</th><th>Player</th><th>Pos 1</th><th>Pos 2</th><th>Pos 3</th><th>Edit</th></tr>";
+    managementTable += "<tr><th>Reorder</th><th>Player</th><th>Pos 1</th><th>Pos 2</th><th>Pos 3</th><th>Edit</th><th>Active</th></tr>";
 
     // Data
     let counter = 0;
@@ -119,6 +121,7 @@ const populateManagementTable = function (mRoster, battingOrder) {
         managementTable += "<td class='centerTD' id='pos2SelectCell" + player.alias + "'></td>"; // 2nd position select
         managementTable += "<td class='centerTD' id='pos3SelectCell" + player.alias + "'></td>"; // 3rd position select
         managementTable += "<td class='centerTD'><span id='editBtn" + player.alias + "' class='editBtn'>📝</span></td>"; // Edit player button
+        managementTable += "<td class='centerTD'><input id='activeBox" + player.alias + "' type='checkbox' checked='true'>"
         managementTable += "</tr>"; // end row
         counter++;
     }
@@ -134,6 +137,14 @@ function addEditListeners() { // Edit button click listeners
         })
     }
 };
+
+function addInactiveListeners() { // Active checkbox click listeners
+    for (let p of rc) {
+        document.getElementById('activeBox' + p.alias).addEventListener('input', function () {
+            markInactive(p);
+        })
+    }
+}
 
 function addReorderListeners() { // Reorder button click listeners
     for (let p = 0; p < bo.length; p++) {
@@ -192,11 +203,6 @@ const addPositionSelectors = function () {
                 pos3Select.appendChild(pos3Option);
             }
         }
-
-        const inactive = document.createElement('option');      // Include inactive option in pos 1 selector
-        inactive.value = 'Inactive';
-        inactive.textContent = 'Inactive';
-        pos1Select.appendChild(inactive);
 
         const targetElement1 = document.getElementById("pos1SelectCell" + p.alias); // Insert dropdowns into correct cells. Dropdown and cell ID# should correspond
         targetElement1.appendChild(pos1Select);                                     // Ergo line up correctly regardless of batting order
@@ -373,6 +379,23 @@ function deletePlayer(player) {
 }
 //-----------Edit Player------END-----------------//
 
+//-----------Manage Inactive-------START----------//
+function populateInactiveTable(rci) {
+    for (let player of rci) {
+        inactiveTBody.innerHTML += "<tr><td>" + (player.lName.toUpperCase()) + ", " + player.fName + "</td>"; // New row, player name
+        inactiveTBody.innerHTML += "<td class='centerTD'><button id='activeButton" + player.alias + "'>Activate</button></td></tr>" // Activate button
+    }
+}
+
+function markInactive(player) {
+    console.log('Inactive: ', player.alias)
+}
+
+function showInactive() {    // Show inactive table if not empty, otherwise hide. Called by loadTable
+    rci ? manageInactiveDiv.style.display = 'block' : manageInactiveDiv.style.display = 'none'
+}
+//-----------Manage Inactive-------END------------//
+
 //-----------Add Player------START-----------------//
 function addPlayer() {
     addErrorText.textContent = "";
@@ -415,10 +438,7 @@ function addPlayer() {
     pos3Null.value = '';
     pos3Null.textContent = '- none -';
     addPos3.appendChild(pos3Null);
-    const inactive = document.createElement('option');      // Include inactive option in pos 1 selector
-    inactive.value = 'Inactive';
-    inactive.textContent = 'Inactive';
-    addPos1.appendChild(inactive);
+
     addPosDiv.appendChild(addPos1);                         // Draw dropdowns
     addPosDiv.appendChild(addPos2);
     addPosDiv.appendChild(addPos3);
@@ -570,6 +590,8 @@ const loadTable = function () {
         addPositionSelectors();
         addEditListeners();
         addReorderListeners();
+        addInactiveListeners();
+        showInactive();
     }
 };
 document.addEventListener('DOMContentLoaded', loadTable());
