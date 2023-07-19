@@ -13,7 +13,7 @@ window.bo = bo;
 //----------Global Variables & Event Listeners---------------//
 const closeEditBtn = document.getElementsByClassName('close')[0];
 const closeAddBtn = document.getElementsByClassName('close')[1];
-const editSaveBtn = document.getElementById('editSaveBtn');
+const editSaveBtn = document.getElementById('editSaveBtn'); //
 const generateLineupBtn = document.getElementById('generateLineupBtn')
 const editPlayerModal = document.getElementById('editModal');
 const addPlayerModal = document.getElementById('addModal');
@@ -23,12 +23,12 @@ const editLName = document.getElementById('editLName');
 const editFName = document.getElementById('editFName');
 const addFName = document.getElementById('addFName');
 const addLName = document.getElementById('addLName');
-const deletePlayerBtn = document.getElementById('deletePlayerBtn');
+const deletePlayerBtn = document.getElementById('deletePlayerBtn'); //
 const addPlayerBtn = document.getElementById('addPlayerBtn');
+const addSaveBtn = document.getElementById('addSaveBtn'); //
 const addPosDiv = document.getElementById('addPosDiv');
 const addErrorText = document.getElementById("addErrorText");
 const editErrorText = document.getElementById("editErrorText");
-
 
 addPlayerBtn.addEventListener('click', function () {
     addPlayer();
@@ -256,12 +256,20 @@ const editPlayer = function (player) {
             console.log(thisPlayerSkills)
         })
     }
-    editSaveBtn.addEventListener('click', function () {
-        saveEdit(player, thisPlayerSkills, oldFName, oldLName);
-    })
-    deletePlayerBtn.addEventListener('click', function () {
-        deletePlayer(player);
-    })
+
+    const handleSaveClick = function () {
+        if (confirm("Save changes?")) {
+            saveEdit(player, thisPlayerSkills, oldFName, oldLName);
+        }
+    }
+    const handleDeleteClick = function () {
+        if (confirm("Delete player from memory. Proceed?")) {
+            deletePlayer(player);
+        }
+    }
+
+    editSaveBtn.addEventListener('click', handleSaveClick, { once: true })
+    deletePlayerBtn.addEventListener('click', handleDeleteClick, { once: true });
 }
 
 function saveEdit(player, thisPlayerSkills, oldFName, oldLName) {
@@ -312,7 +320,7 @@ function saveEdit(player, thisPlayerSkills, oldFName, oldLName) {
 
         const scProperty = player.alias;                                        // Delete skills property under player's old name
         delete sc[scProperty];
-        const newAlias = editLName.value + editFName.value;                     
+        const newAlias = editLName.value + editFName.value;
         sc[newAlias] = thisPlayerSkills;                                        // Edit playerSkills object with new values for this player under new name   
         console.log(sc);
         const rcIndexOfPlayer = rc.indexOf(player);                             // Edit roster object with new name
@@ -338,28 +346,26 @@ function saveEdit(player, thisPlayerSkills, oldFName, oldLName) {
 }
 
 function deletePlayer(player) {
-    if (confirm("Delete player from memory. Proceed?")) {
-        const playerIndex = rc.indexOf(player);                             // Remove from rc, array of objects. props is already the object in question
-        rc.splice(playerIndex, 1);
+    const playerIndex = rc.indexOf(player);                             // Remove from rc, array of objects. props is already the object in question
+    rc.splice(playerIndex, 1);
 
-        const boElement = bo.find(name => name === player.alias);           // Remove from bo, array of strings, using identifier (alias)
-        const boIndex = bo.indexOf(boElement);
-        bo.splice(boIndex, 1);
+    const boElement = bo.find(name => name === player.alias);           // Remove from bo, array of strings, using identifier (alias)
+    const boIndex = bo.indexOf(boElement);
+    bo.splice(boIndex, 1);
 
-        const scProperty = player.alias;                                    // Remove from sc, object of objects, also using alias (key of property in this case)
-        delete sc[scProperty];                                                  // NOTE: When the property's name is a variable in the function, must use square brackets, not dot
+    const scProperty = player.alias;                                    // Remove from sc, object of objects, also using alias (key of property in this case)
+    delete sc[scProperty];                                                  // NOTE: When the property's name is a variable in the function, must use square brackets, not dot
 
-        localStorage.setItem('roster', JSON.stringify(rc));                 // Save changes to main data objects
-        localStorage.setItem('battingOrder', JSON.stringify(bo));
-        localStorage.setItem('playerSkill', JSON.stringify(sc));
+    localStorage.setItem('roster', JSON.stringify(rc));                 // Save changes to main data objects
+    localStorage.setItem('battingOrder', JSON.stringify(bo));
+    localStorage.setItem('playerSkill', JSON.stringify(sc));
 
-        editPlayerModal.style.display = 'none';                             // Close and blank edit player modal
-        editLName.value = '';
-        editFName.value = '';
-        skillsDiv.innerHTML = '';
+    editPlayerModal.style.display = 'none';                             // Close and blank edit player modal
+    editLName.value = '';
+    editFName.value = '';
+    skillsDiv.innerHTML = '';
 
-        loadTable();                                                        // Reload table
-    }
+    loadTable();                                                        // Reload table
 }
 //-----------Edit Player------END-----------------//
 
@@ -470,7 +476,7 @@ function addPlayer() {
 
     addSaveBtn.addEventListener('click', function () {
         saveNewPlayer(newPlayerPos, newSkillObj);
-    })
+    }, { once: true })
 
     addPlayerModal.style.display = 'block'
 }
