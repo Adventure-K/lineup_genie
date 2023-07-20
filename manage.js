@@ -382,9 +382,9 @@ function deletePlayer(player) {
 
 //-----------Manage Inactive-------START----------//
 function populateInactiveTable(rci) {
+    inactiveTBody.innerHTML = "";
     for (let player of rci) {
-        inactiveTBody.innerHTML += "<tr><td>" + (player.lName.toUpperCase()) + ", " + player.fName + "</td>"; // New row, player name
-        inactiveTBody.innerHTML += "<td class='centerTD'><button id='activeButton" + player.alias + "'>Activate</button></td></tr>" // Activate button
+        inactiveTBody.innerHTML += "<tr><td>" + (player.lName.toUpperCase()) + ", " + player.fName + "</td><td class='centerTD'><button id='activeButton" + player.alias + "'>Activate</button></td></tr>"
     }
 
     for (let p of rci) {
