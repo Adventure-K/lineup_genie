@@ -1,4 +1,16 @@
-#editModal {
+table,
+th,
+td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+th {
+    font-weight: bold;
+}
+
+#editModal,
+#addModal {
     display: none;
 }
 
@@ -40,4 +52,16 @@
 .up,
 .down {
     cursor: pointer;
+}
+
+.input-error {
+    border: 2px solid red;
+}
+
+.error-message {
+    color: red;
+}
+
+#manageInactiveDiv {
+    display: none;
 }

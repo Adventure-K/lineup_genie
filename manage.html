@@ -5,18 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lineup Genie</title>
-    <style>
-        table,
-        th,
-        td {
-            border: 1px solid black;
-            border-collapse: collapse;
-        }
-
-        th {
-            font-weight: bold;
-        }
-    </style>
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -30,15 +18,46 @@
     <div id="managePlayersDiv"></div>
     <br>
     <button id="generateLineupBtn">Generate Lineup</button>
+    <br><br>
+    <div id="manageInactiveDiv">
+        <table>
+            <tr>
+                <th colspan="2">Inactive</th>
+            </tr>
+            <tr>
+                <th>Player</th>
+                <th>Activate</th>
+            </tr>
+            <tbody id="inactiveTBody"></tbody>
+        </table>
+    </div>
 
     <div id="editModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
             <h2>Edit Player</h2>
+            <hr>
             <input type="text" id="editFName">
             <input type="text" id="editLName">
             <div id="editSkills"></div>
             <button id="editSaveBtn">Save</button>
+            <span id="editErrorText" class="error-message" style="display: none;"></span>
+            <button id="deletePlayerBtn">Delete Player</button>
+        </div>
+    </div>
+
+    <div id="addModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Add Player</h2>
+            <hr>
+            <input type="text" id="addFName" placeholder="First Name" required>
+            <input type="text" id="addLName" placeholder="Last Name" required>
+            <div id="addPosDiv"></div>
+            <div id="addSkills"></div>
+            <div id="addSaveDiv"></div>
+            <button id="addSaveBtn">Save Player</button>
+            <span id="addErrorText" class="error-message" style="display: none;"></span>
         </div>
     </div>
 
