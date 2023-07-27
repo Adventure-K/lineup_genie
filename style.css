@@ -65,3 +65,7 @@ th {
 #manageInactiveDiv {
     display: none;
 }
+
+.bold {
+    font-weight:bolder;
+}

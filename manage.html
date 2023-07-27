@@ -19,6 +19,38 @@
     <div id="managePlayersDiv"></div>
     <br>
     <button id="generateLineupBtn">Generate Lineup</button>
+    <div id="errorDialog">
+        <ul id="errorList">
+            <li class="error" id="noP" style="display:none">Need a pitcher</li>
+            <li class="error" id="no1B" style="display:none">Need a first baseman</li>
+            <li class="error" id="no2B" style="display:none">Need a second baseman</li>
+            <li class="error" id="no3B" style="display:none">Need a third baseman</li>
+            <li class="error" id="noSS" style="display:none">Need a shortstop</li>
+            <li class="error" id="noLF" style="display:none">Need a left fielder</li>
+            <li class="error" id="noRF" style="display:none">Need a right fielder</li>
+            <li class="error" id="noLCF" style="display:none">Need a left center fielder</li>
+            <li class="error" id="noRCF" style="display:none">Need a right center fielder</li>
+
+            <li class="error" id="tooManyP" style="display:none">1 pitcher max</li>
+            <li class="error" id="tooManyC" style="display:none">1 catcher max</li>
+            <li class="error" id="tooMany1B" style="display:none">1 first baseman max</li>
+            <li class="error" id="tooMany2B" style="display:none">1 second baseman max</li>
+            <li class="error" id="tooMany3B" style="display:none">1 third baseman max</li>
+            <li class="error" id="tooManySS" style="display:none">1 shortstop max</li>
+            <li class="error" id="tooManyLF" style="display:none">1 left fielder max</li>
+            <li class="error" id="tooManyRF" style="display:none">1 right fielder max</li>
+            <li class="error" id="tooManyLCF" style="display:none">1 left center fielder max</li>
+            <li class="error" id="tooManyRCF" style="display:none">1 right center fielder max</li>
+            <li class="error" id="tooManyUtil1" style="display:none">10-man: 1 utility player max</li>
+            <li class="error" id="tooManyUtil2" style="display:none">11-man: 2 utility players max</li>
+            <li class="error" id="tooManyUtil3" style="display:none">12-man: 3 utility players max</li>
+            <li class="error" id="tooManyUtil4" style="display:none">4 utility players max</li>
+
+            <li class="error" id="smallRoster" style="display:none">Not enough active players</li>
+            <li class="error" id="noCOrU" style="display:none">Must have a catcher OR utility</li>
+            <li class="error" id="RCFIn9" style="display:none">Exclude RCF in a 9-man lineup</li>
+        </ul>
+    </div>
     <br><br>
     <div id="manageInactiveDiv">
         <table>
@@ -36,10 +68,18 @@
         <h3>Constraints</h3>
         <ul>
             <li>Active roster must be at least 9 players.</li>
-            <li>All lineups MUST have an assigned catcher or a utility player.</li>
+            <li>All lineups <span class='bold'>must</span> have an assigned catcher or a utility player.</li>
             <li>A 9-man lineup requires either one C or Util in Pos 1, and RCF must be omitted.</li>
-            <li>For lineups of 10 or more, each position except C, Util and DH must be assigned in Pos 1 once. 
-                <br>Any remaining players must be Util (4 max), C (1 max) or DH.</li>
+            <li>For lineups of 10 or more, each position except C, Util and DH must be assigned in Pos 1 <span
+                    class='bold'>once</span>.
+                <br>Any remaining players must be C (1 max), DH or Util:
+                <ul>
+                    <li>10-man: up to 1 Util</li>
+                    <li>11-man: up to 2 Utils</li>
+                    <li>12-man: up to 3 Utils</li>
+                    <li>13 or more: up to 4 Utils</li>
+                </ul>
+            </li>
             <li>Any roster with C assigned and no Utils will generate an empty sparse table.</li>
         </ul>
     </div>
