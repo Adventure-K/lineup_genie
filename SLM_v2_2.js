@@ -1308,7 +1308,7 @@ for (let i = 0; i < solutions.length; i++) {
 //sort them best to worst
 let sortedSolutionsIndices = Object.keys(approvedSolutions).sort(function (a, b) { return approvedSolutions[b].skill - approvedSolutions[a].skill });
 
-console.log("solutions run: " + solutions.length + "." + approvedSolutions.length + "solutions passed QA.");
+console.log("solutions run: " + solutions.length + ". " + approvedSolutions.length + " solutions passed QA.");
 
 let top3 = [];
 top3[0] = approvedSolutions[sortedSolutionsIndices[0]].inningAssignments;

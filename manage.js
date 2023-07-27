@@ -104,7 +104,7 @@ const populateManagementTable = function (mRoster, battingOrder) {
     console.log('battingOrder: ', battingOrder)
 
     // Headers
-    managementTable += "<tr><th>Reorder</th><th>Player</th><th>Pos 1</th><th>Pos 2</th><th>Pos 3</th><th>Edit</th><th>Active</th></tr>";
+    managementTable += "<tr><th>Reorder</th><th>Batting Order</th><th>Pos 1</th><th>Pos 2</th><th>Pos 3</th><th>Edit</th><th>Active</th></tr>";
 
     // Data
     let counter = 0;

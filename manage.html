@@ -11,6 +11,7 @@
 <body>
     <h1>Manage Team</h1>
     <hr>
+    <div id="datasetValidation"></div>
     <br>
     <button id="addPlayerBtn">Add Player</button>
     <button id="defaultData">Load Default Team Data</button>
@@ -30,6 +31,17 @@
             </tr>
             <tbody id="inactiveTBody"></tbody>
         </table>
+    </div>
+    <div id="rulesStatic">
+        <h3>Constraints</h3>
+        <ul>
+            <li>Active roster must be at least 9 players.</li>
+            <li>All lineups MUST have an assigned catcher or a utility player.</li>
+            <li>A 9-man lineup requires either one C or Util in Pos 1, and RCF must be omitted.</li>
+            <li>For lineups of 10 or more, each position except C, Util and DH must be assigned in Pos 1 once. 
+                <br>Any remaining players must be Util (4 max), C (1 max) or DH.</li>
+            <li>Any roster with C assigned and no Utils will generate an empty sparse table.</li>
+        </ul>
     </div>
 
     <div id="editModal" class="modal">
