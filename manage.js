@@ -56,6 +56,7 @@ closeAddBtn.addEventListener('click', function () {
     addErrorText.textContent = "";
 })
 
+//-------Save lineup to storage----START------//
 generateLineupBtn.addEventListener('click', function () {
     const order = bo;
     const pos1Choices = document.getElementsByClassName('pos1Select');
@@ -69,6 +70,8 @@ generateLineupBtn.addEventListener('click', function () {
         let pos = pos1Choices[i].value;
         pos1Data[alias] = pos;
     }
+    console.log('POS 1 DATA: ', pos1Data);
+
     for (let i = 0; i < pos2Choices.length; i++) { // Create object of current pos 2 selections for all participants
         let alias = order[i];
         let pos2 = pos2Choices[i].value;
@@ -92,10 +95,12 @@ generateLineupBtn.addEventListener('click', function () {
             player.pos3 = pos3Data[alias]
         }
     }
-    console.log(rc)
     localStorage.setItem('roster', JSON.stringify(rc));     // POST new pos selections to localStorage roster
     window.location.href = "SLM_v2.html"                    // Push user to generator page
 })
+
+//-------Save lineup to storage----END------//
+
 
 //-----------Populate Team Management Table----START----//
 const populateManagementTable = function (mRoster, battingOrder) {
@@ -118,7 +123,7 @@ const populateManagementTable = function (mRoster, battingOrder) {
             managementTable += "<tr><td class='centerTD'><span class='up'>⬆️</span> <span class='down'>⬇️</span></td>";
         }
         managementTable += "<td>" + (player.lName.toUpperCase()) + ", " + player.fName + "</td>"; // Player name
-        managementTable += "<td class='centerTD' id='pos1SelectCell" + player.alias + "'></td>"; // Main position select
+        managementTable += "<td class='centerTD' class='mainPosSelect' id='pos1SelectCell" + player.alias + "'></td>"; // Main position select
         managementTable += "<td class='centerTD' id='pos2SelectCell" + player.alias + "'></td>"; // 2nd position select
         managementTable += "<td class='centerTD' id='pos3SelectCell" + player.alias + "'></td>"; // 3rd position select
         managementTable += "<td class='centerTD'><span id='editBtn" + player.alias + "' class='editBtn'>📝</span></td>"; // Edit player button
@@ -128,6 +133,22 @@ const populateManagementTable = function (mRoster, battingOrder) {
     }
     managementTable += "</table>"
     return managementTable;
+}
+
+function positionErrorCheck() { // Gather current main position assignments for the error checker
+    const pos1Selections = [];
+    for (let p = 0; p < bo.length; p++) {
+        pos1Selections.push(document.getElementsByClassName('mainPosSelect')[p].value);
+    }
+    return pos1Selections;
+}
+
+function addPositionListenersForErrors() { // Attach input listeners to Pos 1 selects to refresh current positions object for error checker
+    for (let p = 0; p < bo.length; p++) {
+        document.getElementsByClassName('mainPosSelect')[p].addEventListener('input', function() {
+            positionErrorCheck();
+        })
+    }
 }
 
 function addEditListeners() { // Edit button click listeners
@@ -631,6 +652,8 @@ const loadTable = function () {
         let managementTableDOM = populateManagementTable(rc, bo);
         mgmtTableToHTML("managePlayersDiv", managementTableDOM);
         addPositionSelectors();
+        positionErrorCheck();
+        addPositionListenersForErrors();
         addEditListeners();
         addReorderListeners();
         addInactiveListeners();
@@ -648,11 +671,11 @@ loadDefaultBtn.addEventListener('click', function () {
     if (confirm("THIS WILL OVERRIDE ANY SAVED PLAYER DATA. PROCEED?")) {
         console.log('DEFAULT DATA')
         localStorage.clear();
-        localStorage.setItem('roster', JSON.stringify(defaultRoster));              // POST
-        localStorage.setItem('playerSkill', JSON.stringify(defaultSkills));         // POST
-        localStorage.setItem('battingOrder', JSON.stringify(defaultBattingOrder));  // POST
-        localStorage.setItem('rosterInactive', JSON.stringify(defaultRosterInactive));               // POST
-        localStorage.setItem('playerSkillInactive', JSON.stringify(''));            // POST
+        localStorage.setItem('roster', JSON.stringify(defaultRoster));                  // POST
+        localStorage.setItem('playerSkill', JSON.stringify(defaultSkills));             // POST
+        localStorage.setItem('battingOrder', JSON.stringify(defaultBattingOrder));      // POST
+        localStorage.setItem('rosterInactive', JSON.stringify(defaultRosterInactive));  // POST
+        localStorage.setItem('playerSkillInactive', JSON.stringify(''));                // POST
         loadTable();
         location.reload();
     }
