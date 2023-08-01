@@ -269,9 +269,7 @@ const editPlayer = function (player) {
     }
 
     const handleSaveClick = function () {
-        if (confirm("Save changes?")) {
             saveEdit(player, thisPlayerSkills, oldFName, oldLName);
-        }
     }
     const handleDeleteClick = function () {
         if (confirm("Delete player from memory. Proceed?")) {
