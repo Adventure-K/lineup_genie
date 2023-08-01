@@ -36,6 +36,7 @@ const addErrorText = document.getElementById("addErrorText");
 const editErrorText = document.getElementById("editErrorText");
 const manageInactiveDiv = document.getElementById('manageInactiveDiv');
 const inactiveTBody = document.getElementById('inactiveTBody');
+const errorDialog = document.getElementById('errorDialog');
 
 addPlayerBtn.addEventListener('click', function () {
     addPlayer();
@@ -56,6 +57,7 @@ closeAddBtn.addEventListener('click', function () {
     addErrorText.textContent = "";
 })
 
+//-------Save lineup to storage----START------//
 generateLineupBtn.addEventListener('click', function () {
     const order = bo;
     const pos1Choices = document.getElementsByClassName('pos1Select');
@@ -69,6 +71,8 @@ generateLineupBtn.addEventListener('click', function () {
         let pos = pos1Choices[i].value;
         pos1Data[alias] = pos;
     }
+    console.log('POS 1 DATA: ', pos1Data);
+
     for (let i = 0; i < pos2Choices.length; i++) { // Create object of current pos 2 selections for all participants
         let alias = order[i];
         let pos2 = pos2Choices[i].value;
@@ -92,10 +96,12 @@ generateLineupBtn.addEventListener('click', function () {
             player.pos3 = pos3Data[alias]
         }
     }
-    console.log(rc)
     localStorage.setItem('roster', JSON.stringify(rc));     // POST new pos selections to localStorage roster
     window.location.href = "SLM_v2.html"                    // Push user to generator page
 })
+
+//-------Save lineup to storage----END------//
+
 
 //-----------Populate Team Management Table----START----//
 const populateManagementTable = function (mRoster, battingOrder) {
@@ -128,6 +134,53 @@ const populateManagementTable = function (mRoster, battingOrder) {
     }
     managementTable += "</table>"
     return managementTable;
+}
+
+function positionErrorCheck() { // Make sure user selection of positions is compatible with generator
+    generateLineupBtn.removeAttribute('disabled');
+    errorDialog.innerHTML = '';
+    const pl = [];
+    for (let p = 0; p < bo.length; p++) {
+        pl.push(document.getElementsByClassName('pos1Select')[p].value);    // Array of all selected positions
+    }
+    console.log('error check: ', pl)
+    function countPos(arr, pos) {           // Function to count occurrence of values within array
+        return arr.reduce((count, cv) => {
+            if (cv === pos) {
+                count++;
+            }
+            return count;
+        }, 0)
+    }
+    if (pl.length < 9 ||            // Min lineup length: 9
+        countPos(pl, 'P') != 1 ||   // 1 of each of these positions required
+        countPos(pl, '1B') != 1 || 
+        countPos(pl, '2B') != 1 || 
+        countPos(pl, '3B') != 1 || 
+        countPos(pl, 'SS') != 1 || 
+        countPos(pl, 'LF') != 1 || 
+        countPos(pl, 'LCF') != 1 || 
+        countPos(pl, 'RF') != 1 || 
+        countPos(pl, 'RCF') > 1 ||  // 0 or 1 of these required
+        countPos(pl, 'C') > 1 || 
+        (countPos(pl, 'RCF') != 1 && pl.length > 9) ||      // LCF required if more than 9 players
+        (pl.length === 10 && countPos(pl, 'Util') > 1) ||   // At most 1 Util with 10 players
+        (pl.length === 11 && countPos(pl, 'Util') > 2) ||   // At most 2 Util with 11 players
+        (pl.length === 12 && countPos(pl, 'Util') > 3) ||   // At most 3 Util with 12 players
+        (pl.length > 12 && countPos(pl, 'Util') > 4) ||     // At most 4 Util 
+        (countPos(pl, 'Util') === 0 && countPos(pl, 'C') === 0) // Must have at least 1 C or at least 1 Util
+    ) {     
+        errorDialog.innerHTML = 'Lineup error. Check constraints';
+        generateLineupBtn.setAttribute('disabled', true)
+    }
+}
+
+function addPositionListenersForErrors() { // Attach input listeners to Pos 1 selects to refresh current positions object for error checker
+    for (let p = 0; p < bo.length; p++) {
+        document.getElementsByClassName('pos1Select')[p].addEventListener('input', function() {
+            positionErrorCheck();
+        })
+    }
 }
 
 function addEditListeners() { // Edit button click listeners
@@ -634,6 +687,8 @@ const loadTable = function () {
         addInactiveListeners();
         populateInactiveTable(rci);
         showInactive();
+        addPositionListenersForErrors();
+        positionErrorCheck();
     }
 };
 document.addEventListener('DOMContentLoaded', loadTable());
@@ -646,11 +701,11 @@ loadDefaultBtn.addEventListener('click', function () {
     if (confirm("THIS WILL OVERRIDE ANY SAVED PLAYER DATA. PROCEED?")) {
         console.log('DEFAULT DATA')
         localStorage.clear();
-        localStorage.setItem('roster', JSON.stringify(defaultRoster));              // POST
-        localStorage.setItem('playerSkill', JSON.stringify(defaultSkills));         // POST
-        localStorage.setItem('battingOrder', JSON.stringify(defaultBattingOrder));  // POST
-        localStorage.setItem('rosterInactive', JSON.stringify(defaultRosterInactive));               // POST
-        localStorage.setItem('playerSkillInactive', JSON.stringify(''));            // POST
+        localStorage.setItem('roster', JSON.stringify(defaultRoster));                  // POST
+        localStorage.setItem('playerSkill', JSON.stringify(defaultSkills));             // POST
+        localStorage.setItem('battingOrder', JSON.stringify(defaultBattingOrder));      // POST
+        localStorage.setItem('rosterInactive', JSON.stringify(defaultRosterInactive));  // POST
+        localStorage.setItem('playerSkillInactive', JSON.stringify(''));                // POST
         loadTable();
         location.reload();
     }

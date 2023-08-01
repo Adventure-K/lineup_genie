@@ -65,3 +65,11 @@ th {
 #manageInactiveDiv {
     display: none;
 }
+
+.bold {
+    font-weight:bolder;
+}
+
+#errorDialog {
+    color: red;
+}
