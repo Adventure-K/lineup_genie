@@ -8,12 +8,10 @@ const rc = JSON.parse(localStorage.getItem('roster'));                  // GET r
 const sc = JSON.parse(localStorage.getItem('playerSkill'));             // GET player skills object
 const bo = JSON.parse(localStorage.getItem('battingOrder'));            // GET batting order array
 const rci = JSON.parse(localStorage.getItem('rosterInactive'));         // GET inactive roster. Inactive data for team management only
-const sci = JSON.parse(localStorage.getItem('playerSkillInactive'));    // GET inactive roster skills
 window.rc = rc; // This line is required to access the value in the console from a JS file loaded as a module. Good for debug
 window.sc = sc;
 window.bo = bo;
 window.rci = rci;
-window.sci = sci;
 
 //----------Global Variables & Event Listeners---------------//
 const closeEditBtn = document.getElementsByClassName('close')[0];
@@ -71,7 +69,6 @@ generateLineupBtn.addEventListener('click', function () {
         let pos = pos1Choices[i].value;
         pos1Data[alias] = pos;
     }
-    console.log('POS 1 DATA: ', pos1Data);
 
     for (let i = 0; i < pos2Choices.length; i++) { // Create object of current pos 2 selections for all participants
         let alias = order[i];
@@ -110,7 +107,7 @@ const populateManagementTable = function (mRoster, battingOrder) {
     console.log('battingOrder: ', battingOrder)
 
     // Headers
-    managementTable += "<tr><th>Reorder</th><th>Batting Order</th><th>Pos 1</th><th>Pos 2</th><th>Pos 3</th><th>Edit</th><th>Active</th></tr>";
+    managementTable += "<tr><th>Reorder</th><th>Batting Order</th><th>Main Position</th><th>2nd Position</th><th>3rd Position</th><th>Edit</th><th>Active</th></tr>";
 
     // Data
     let counter = 0;
@@ -123,7 +120,7 @@ const populateManagementTable = function (mRoster, battingOrder) {
         } else {
             managementTable += "<tr><td class='centerTD'><span class='up'>⬆️</span> <span class='down'>⬇️</span></td>";
         }
-        managementTable += "<td>" + (player.lName.toUpperCase()) + ", " + player.fName + "</td>"; // Player name
+        managementTable += "<td class='playerName'>" + (player.lName.toUpperCase()) + ", " + player.fName + "</td>"; // Player name
         managementTable += "<td class='centerTD' id='pos1SelectCell" + player.alias + "'></td>"; // Main position select
         managementTable += "<td class='centerTD' id='pos2SelectCell" + player.alias + "'></td>"; // 2nd position select
         managementTable += "<td class='centerTD' id='pos3SelectCell" + player.alias + "'></td>"; // 3rd position select
@@ -416,7 +413,7 @@ function deletePlayer(player) {
     bo.splice(boIndex, 1);
 
     const scProperty = player.alias;                                    // Remove from sc, object of objects, also using alias (key of property in this case)
-    delete sc[scProperty];                                                  // NOTE: When the property's name is a variable in the function, must use square brackets, not dot
+    delete sc[scProperty];                                              // LESSON: When the property's name is a variable in the function, must use square brackets, not dot
 
     localStorage.setItem('roster', JSON.stringify(rc));                 // Save changes to main data objects
     localStorage.setItem('battingOrder', JSON.stringify(bo));
@@ -459,13 +456,9 @@ function markInactive(player, sc) {
     const boIndex = bo.indexOf(boElement);
     bo.splice(boIndex, 1);                                  // remove from batting order
 
-    // delete sc[scProperty];                               // remove from active skill object        
-
     localStorage.setItem('rosterInactive', JSON.stringify(rci));
-    // localStorage.setItem('playerSkillInactive', JSON.stringify(sci));
     localStorage.setItem('roster', JSON.stringify(rc));
     localStorage.setItem('battingOrder', JSON.stringify(bo));
-    // localStorage.setItem('playerSkill', JSON.stringify(sc));
 
     loadTable();
 }
@@ -476,7 +469,7 @@ function markActive(player) {
     rc.push(player);                            // add to active roster
     const playerIndex = rci.indexOf(player);    // remove from inactive roster
     rci.splice(playerIndex, 1);
-    bo.push(player['alias']);                   // add to batting order (last place by default)
+    bo.push(player['alias']);                   // add to end of batting order
 
     localStorage.setItem('rosterInactive', JSON.stringify(rci));
     localStorage.setItem('roster', JSON.stringify(rc));
@@ -705,7 +698,6 @@ loadDefaultBtn.addEventListener('click', function () {
         localStorage.setItem('playerSkill', JSON.stringify(defaultSkills));             // POST
         localStorage.setItem('battingOrder', JSON.stringify(defaultBattingOrder));      // POST
         localStorage.setItem('rosterInactive', JSON.stringify(defaultRosterInactive));  // POST
-        localStorage.setItem('playerSkillInactive', JSON.stringify(''));                // POST
         loadTable();
         location.reload();
     }

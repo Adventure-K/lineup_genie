@@ -7,6 +7,13 @@ td {
 
 th {
     font-weight: bold;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.playerName {
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
 #editModal,
@@ -72,4 +79,12 @@ th {
 
 #errorDialog {
     color: red;
+}
+
+.pos1Select {
+    background-color:aqua;
+}
+
+select {
+    width: 100px;
 }
