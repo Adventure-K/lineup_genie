@@ -35,7 +35,7 @@ const daveIsCousin = true;
 
 import { roster as defaultRoster } from './teamData.js';				// Default data set; shouldn't be needed on this page anymore
 import { playerSkill as defaultPlayerSkills } from './teamData.js';
-import { battingOrder as defaultBattingOrder } from './teamData.js';	
+import { battingOrder as defaultBattingOrder } from './teamData.js';
 
 const roster = JSON.parse(localStorage.getItem('roster'));				// GET
 const playerSkill = JSON.parse(localStorage.getItem('playerSkill'));	// GET
@@ -43,6 +43,8 @@ const battingOrder = JSON.parse(localStorage.getItem('battingOrder'));	// GET
 if (roster === null || playerSkill === null || battingOrder === null) {
 	alert("Team info missing! Please go to Manage Team to add missing info.")
 }
+
+window.roster = roster;
 
 /* ----------------  Determine Attendance. Assign Batting Order. Assign Role (Primary Position). ----START----------------------*/
 //some basic info:
@@ -1329,7 +1331,8 @@ const MakeBatterInfoByInning = function (inn, bo) {	// inn=inningAssignments  [{
 	for (let i = 0; i < battingOrder.length; i++) {
 		let thisBatter = {};
 		//name
-		thisBatter.name = battingOrder[i];
+		let playerObj = roster.find(obj => obj.alias === battingOrder[i])
+		thisBatter.name = playerObj.lName;
 		//role
 		for (var player in playerRoles) {
 			if (playerRoles.hasOwnProperty(player)) {
