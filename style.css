@@ -69,3 +69,7 @@ th {
 .bold {
     font-weight:bolder;
 }
+
+#errorDialog {
+    color: red;
+}

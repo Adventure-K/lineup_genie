@@ -36,6 +36,7 @@ const addErrorText = document.getElementById("addErrorText");
 const editErrorText = document.getElementById("editErrorText");
 const manageInactiveDiv = document.getElementById('manageInactiveDiv');
 const inactiveTBody = document.getElementById('inactiveTBody');
+const errorDialog = document.getElementById('errorDialog');
 
 addPlayerBtn.addEventListener('click', function () {
     addPlayer();
@@ -123,7 +124,7 @@ const populateManagementTable = function (mRoster, battingOrder) {
             managementTable += "<tr><td class='centerTD'><span class='up'>⬆️</span> <span class='down'>⬇️</span></td>";
         }
         managementTable += "<td>" + (player.lName.toUpperCase()) + ", " + player.fName + "</td>"; // Player name
-        managementTable += "<td class='centerTD' class='mainPosSelect' id='pos1SelectCell" + player.alias + "'></td>"; // Main position select
+        managementTable += "<td class='centerTD' id='pos1SelectCell" + player.alias + "'></td>"; // Main position select
         managementTable += "<td class='centerTD' id='pos2SelectCell" + player.alias + "'></td>"; // 2nd position select
         managementTable += "<td class='centerTD' id='pos3SelectCell" + player.alias + "'></td>"; // 3rd position select
         managementTable += "<td class='centerTD'><span id='editBtn" + player.alias + "' class='editBtn'>📝</span></td>"; // Edit player button
@@ -135,17 +136,48 @@ const populateManagementTable = function (mRoster, battingOrder) {
     return managementTable;
 }
 
-function positionErrorCheck() { // Gather current main position assignments for the error checker
-    const pos1Selections = [];
+function positionErrorCheck() { // Make sure user selection of positions is compatible with generator
+    generateLineupBtn.removeAttribute('disabled');
+    errorDialog.innerHTML = '';
+    const pl = [];
     for (let p = 0; p < bo.length; p++) {
-        pos1Selections.push(document.getElementsByClassName('mainPosSelect')[p].value);
+        pl.push(document.getElementsByClassName('pos1Select')[p].value);    // Array of all selected positions
     }
-    return pos1Selections;
+    console.log('error check: ', pl)
+    function countPos(arr, pos) {           // Function to count occurrence of values within array
+        return arr.reduce((count, cv) => {
+            if (cv === pos) {
+                count++;
+            }
+            return count;
+        }, 0)
+    }
+    if (pl.length < 9 ||            // Min lineup length: 9
+        countPos(pl, 'P') != 1 ||   // 1 of each of these positions required
+        countPos(pl, '1B') != 1 || 
+        countPos(pl, '2B') != 1 || 
+        countPos(pl, '3B') != 1 || 
+        countPos(pl, 'SS') != 1 || 
+        countPos(pl, 'LF') != 1 || 
+        countPos(pl, 'LCF') != 1 || 
+        countPos(pl, 'RF') != 1 || 
+        countPos(pl, 'RCF') > 1 ||  // 0 or 1 of these required
+        countPos(pl, 'C') > 1 || 
+        (countPos(pl, 'RCF') != 1 && pl.length > 9) ||      // LCF required if more than 9 players
+        (pl.length === 10 && countPos(pl, 'Util') > 1) ||   // At most 1 Util with 10 players
+        (pl.length === 11 && countPos(pl, 'Util') > 2) ||   // At most 2 Util with 11 players
+        (pl.length === 12 && countPos(pl, 'Util') > 3) ||   // At most 3 Util with 12 players
+        (pl.length > 12 && countPos(pl, 'Util') > 4) ||     // At most 4 Util 
+        (countPos(pl, 'Util') === 0 && countPos(pl, 'C') === 0) // Must have at least 1 C or at least 1 Util
+    ) {     
+        errorDialog.innerHTML = 'Lineup error. Check constraints';
+        generateLineupBtn.setAttribute('disabled', true)
+    }
 }
 
 function addPositionListenersForErrors() { // Attach input listeners to Pos 1 selects to refresh current positions object for error checker
     for (let p = 0; p < bo.length; p++) {
-        document.getElementsByClassName('mainPosSelect')[p].addEventListener('input', function() {
+        document.getElementsByClassName('pos1Select')[p].addEventListener('input', function() {
             positionErrorCheck();
         })
     }
@@ -652,13 +684,13 @@ const loadTable = function () {
         let managementTableDOM = populateManagementTable(rc, bo);
         mgmtTableToHTML("managePlayersDiv", managementTableDOM);
         addPositionSelectors();
-        positionErrorCheck();
-        addPositionListenersForErrors();
         addEditListeners();
         addReorderListeners();
         addInactiveListeners();
         populateInactiveTable(rci);
         showInactive();
+        addPositionListenersForErrors();
+        positionErrorCheck();
     }
 };
 document.addEventListener('DOMContentLoaded', loadTable());
