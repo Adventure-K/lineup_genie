@@ -10,7 +10,10 @@ body {
 
 h1 {
     font-family: 'Roboto Slab', sans-serif;
-    margin-left: 4vw;
+    /* margin: 0 auto; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 table,
@@ -19,7 +22,7 @@ td {
     border: 1px solid black;
     border-collapse: collapse;
     font-family: 'Heebo', sans-serif;
-    font-size:large;
+    font-size: large;
 }
 
 table {
@@ -91,11 +94,23 @@ th {
     color: red;
 }
 
-#managePlayersDiv {
+#managePlayersDiv, #manageInactiveDiv {
     margin: 0 auto;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+#buttonAbove, #buttonLow {
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#logo {
+    width: 250px;
+    padding: 10px;
 }
 
 /* footer { */

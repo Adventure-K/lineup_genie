@@ -13,15 +13,19 @@
         rel="stylesheet">
 
 <body>
-    <p>Lineup Genie</p>
+    <img id="logo" src="./logo.png">
     <hr>
     <h1>Manage Team</h1>
-    <button id="addPlayerBtn">Add Player</button>
-    <button id="defaultData">Load Default Team Data</button>
+    <div id="buttonAbove">
+        <button id="addPlayerBtn">Add Player</button>
+        <button id="defaultData">Load Default Team Data</button>
+    </div>
     <br><br>
     <div id="managePlayersDiv"></div>
     <br>
-    <button id="generateLineupBtn">Generate Lineup</button>
+    <div id="buttonLow">
+        <button id="generateLineupBtn">Generate Lineup</button>
+    </div>
     <span id="errorDialog">
 
     </span>
@@ -86,7 +90,7 @@
             <span id="addErrorText" class="error-message" style="display: none;"></span>
         </div>
     </div>
-
+    <hr>
     <footer>
         <p>© 2023 Andrew Kane</p>
         <p>Background image by <a
