@@ -1475,7 +1475,7 @@ printDivHTML("optimizationinfo", optmessage);
 
 // Manage Team button
 document.getElementById('manageTeamBtn').addEventListener('click', function () {
-	window.location.href = "index.html"
+	window.location.href = "manage.html"
 })
 
 
