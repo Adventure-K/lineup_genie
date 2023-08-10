@@ -1416,10 +1416,10 @@ const PrintSparseTable = function (batterInfo, formattingOptions) {
 		for (let i = 0; i < batterInfo.length; i++) {
 			//---lineup Order---
 			let lineupOrder = i + 1;
-			sparseTableHTML = sparseTableHTML + "<tr><td>" + lineupOrder + "</td>";	//new row, then lineup order #
+			sparseTableHTML = sparseTableHTML + "<tr><td class='centerTD'>" + lineupOrder + "</td>";	//new row, then lineup order #
 
 			//---Name and Role---
-			sparseTableHTML = sparseTableHTML + "<td>" + batterInfo[i].name + ", " + batterInfo[i].role + "</td>"; //name and role
+			sparseTableHTML = sparseTableHTML + "<td class='playerName'>" + batterInfo[i].name + ", " + batterInfo[i].role + "</td>"; //name and role
 
 			//---Positions by Inning---
 			//loop through innings
@@ -1436,7 +1436,7 @@ const PrintSparseTable = function (batterInfo, formattingOptions) {
 
 
 							//print out the posstring!
-							sparseTableHTML = sparseTableHTML + "<td>" + position + "</td>"; //position
+							sparseTableHTML = sparseTableHTML + "<td class='centerTD'>" + position + "</td>"; //position
 						}
 					}
 				}
@@ -1475,7 +1475,7 @@ printDivHTML("optimizationinfo", optmessage);
 
 // Manage Team button
 document.getElementById('manageTeamBtn').addEventListener('click', function () {
-	window.location.href = "index.html"
+	window.location.href = "manage.html"
 })
 
 

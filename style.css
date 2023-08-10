@@ -1,14 +1,39 @@
+body {
+    background-image: url('./mark-duffel-iZtPLrobMFI-unsplash.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center center;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    font-family: 'Roboto Slab', sans-serif;
+    /* margin: 0 auto; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 table,
 th,
 td {
     border: 1px solid black;
     border-collapse: collapse;
+    font-family: 'Heebo', sans-serif;
+    font-size: large;
+}
+
+table {
+    background-color: rgba(213, 170, 161, 0.9);
+    border: 3px solid black;
 }
 
 th {
     font-weight: bold;
-    padding-left: 5px;
-    padding-right: 5px;
+    padding-left: 7px;
+    padding-right: 7px;
 }
 
 .playerName {
@@ -69,7 +94,33 @@ th {
     color: red;
 }
 
+#managePlayersDiv, #manageInactiveDiv {
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#buttonAbove, #buttonLow {
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#logo {
+    width: 250px;
+    padding: 10px;
+}
+
+/* footer { */
+    /* display: flex; */
+    /* justify-content: center; */
+    /* align-items: center; */
+/* } */
+
 #manageInactiveDiv {
+    margin: 0 auto;
     display: none;
 }
 
@@ -81,9 +132,9 @@ th {
     color: red;
 }
 
-.pos1Select {
+/* .pos1Select {
     background-color: aqua;
-}
+} */
 
 select {
     width: 100px;
