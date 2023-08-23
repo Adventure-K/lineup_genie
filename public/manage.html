@@ -13,7 +13,19 @@
         rel="stylesheet">
 
 <body>
+    <script>
+        function authenticate() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                console.log('No user logged in. Redirecting')
+                window.location.href = "index.html";
+            }
+        } 
+        authenticate();
+    </script>
     <img id="logo" src="./logo.png">
+    <p id="userIdDisplay">User: </p>
+    <button id="logoutBtn">Log Out</button>
     <hr>
     <h1>Manage Team</h1>
     <div id="buttonAbove">
@@ -90,6 +102,7 @@
             <span id="addErrorText" class="error-message" style="display: none;"></span>
         </div>
     </div>
+    <button id="testBtn">TestF</button>
     <hr>
     <footer>
         <p>© 2023 Andrew Kane</p>
@@ -99,6 +112,7 @@
                 href="https://unsplash.com/photos/iZtPLrobMFI?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>
         </p>
     </footer>
+    <script src="logout.js"></script>
     <script src="manage.js" type="module"></script>
 </body>
 

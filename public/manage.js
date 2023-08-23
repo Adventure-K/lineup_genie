@@ -13,6 +13,10 @@ window.sc = sc;
 window.bo = bo;
 window.rci = rci;
 
+const userIdDisplay = document.getElementById('userIdDisplay');
+let currentUser = JSON.parse(localStorage.getItem('user'));
+userIdDisplay.innerHTML += currentUser
+
 //----------Global Variables & Event Listeners---------------//
 const closeEditBtn = document.getElementsByClassName('close')[0];
 const closeAddBtn = document.getElementsByClassName('close')[1];
@@ -693,7 +697,7 @@ const loadDefaultBtn = document.getElementById('defaultData');
 loadDefaultBtn.addEventListener('click', function () {
     if (confirm("THIS WILL OVERRIDE ANY SAVED PLAYER DATA. PROCEED?")) {
         console.log('DEFAULT DATA')
-        localStorage.clear();
+        // localStorage.clear();
         localStorage.setItem('roster', JSON.stringify(defaultRoster));                  // POST
         localStorage.setItem('playerSkill', JSON.stringify(defaultSkills));             // POST
         localStorage.setItem('battingOrder', JSON.stringify(defaultBattingOrder));      // POST
@@ -703,3 +707,29 @@ loadDefaultBtn.addEventListener('click', function () {
     }
 });
 //-----------Invoke Default Data----END----//
+
+function fetchUsers() {
+    fetch('/auth/users', {
+        method: 'GET',
+    })
+    .then(response => {
+        if(!response.ok) {
+            console.error(response)
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log(data);
+    })
+    .catch(err => {
+        console.error('Fetch error: ', err)
+    });
+}
+
+const testBtn = document.getElementById('testBtn');
+
+testBtn.addEventListener('click', () => {
+    console.log('click');
+    fetchUsers();
+})

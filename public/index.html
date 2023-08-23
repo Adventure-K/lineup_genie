@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lineup Genie</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Heebo&family=Lato:wght@300;400&family=Roboto+Slab:wght@300;400&display=swap"
+        rel="stylesheet">
+
+<body>
+    <img id="logo" src="./logo.png">
+    <hr>
+    <input id="user" placeholder="Username" type="text">
+    <input id="pass" placeholder="Password" type="password">
+    <button id="loginSubmit">Log In</button>
+    <footer>
+        <p>© 2023 Andrew Kane</p>
+        <p>Background image by <a
+                href="https://unsplash.com/@2mduffel?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Mark
+                Duffel</a> on <a
+                href="https://unsplash.com/photos/iZtPLrobMFI?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>
+        </p>
+    </footer>
+    <script>
+        function clearInput() {
+            document.getElementById('user').value = "";
+            document.getElementById('pass').value = "";
+        }
+        function authenticate() {
+            const token = localStorage.getItem('token');
+            if (token) {
+                window.location.href = "manage.html";
+            }
+        }
+        window.onload = clearInput()
+        document.addEventListener('DOMContentLoaded', authenticate());
+    </script>
+    <script src="login.js" type="module"></script>
+</body>
+
+</html>

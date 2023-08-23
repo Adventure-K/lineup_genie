@@ -18,6 +18,22 @@ const {
   passwordResetConfirmationTemplate,
 } = require("../utils/email");
 
+router.get('/message', async (req, res) => {
+  res.json({ message: 'Hello from the bzzzzackend!'});
+});
+
+router.get('/users', async (req, res) => {
+  try {
+    const users = await User.find();
+    res.status(200).json(users);
+  } catch (err) {
+    res.status(500).json({
+      message: 'Error retrieving users',
+      error: err.message,
+    });
+  }
+});
+
 router.post("/signup", async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -40,12 +56,13 @@ router.post("/signup", async (req, res) => {
     } catch (error) {
         res.status(500).json({
             type: 'error',
-            message: 'Error creating user!', error,
+            message: `Error creating user! ${error}`,
         });
     }
 });
 
 router.post("/signin", async (req, res) => {
+  console.log(req.body)
     try {
       const { email, password } = req.body;
       // 1. check if user exists
@@ -79,10 +96,10 @@ router.post("/signin", async (req, res) => {
       sendRefreshToken(res, refreshToken);
       sendAccessToken(req, res, accessToken);
     } catch (error) {
+      // console.log(error)
       res.status(500).json({
         type: "error",
-        message: "Error signing in!",
-        error,
+        message: `Error signing in! ${error}`
       });
     }
   });
