@@ -1,5 +1,19 @@
+body {
+    background-image: url("jose-francisco-morales-hKzmPs8Axh8-unsplash.jpg");
+    /* background-position: center; */
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    padding: 0;
+    margin: 0;
+}
+
 header {
     border-bottom: 20px double black;
+}
+
+header h1 {
+    margin-left: 1rem;
 }
 
 table,
@@ -85,10 +99,22 @@ th {
     color: red;
 }
 
+.textBlob {
+    margin-left: 1rem;
+}
+
 .pos1Select {
     background-color: aqua;
 }
 
 select {
     width: 100px;
+}
+
+footer {
+    border-top: 6px solid black;
+}
+
+footer p {
+    margin-left: 1rem;
 }
