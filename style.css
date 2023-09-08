@@ -1,9 +1,42 @@
+:root {
+    /* Fonts */
+    --heebo: "Heebo", sans-serif;
+    --roboto: "Roboto", sans-serif;
+
+    /* Colors */
+    --infield: #efd2b2;
+    --infieldT: rgba(239, 210, 178, 0.8);
+    --grass: #99a962;
+    --stitch: #f36a70;
+    --stitchT: rgba(236, 106, 112, 0.8);
+    --ball: #fbfbf9;
+    --ballT: rgba(251, 251, 249, 0.8);
+    --pinstripe: #253966;
+
+    /* font scale */
+    --base-size: 1.2rem;
+    --scale: 1.15;
+    --xl: calc(var(--h1) * var(--scale) * var(--scale));
+    --lg: calc(var(--h1) * var(--scale));
+    --h1: calc(var(--h2) * var(--scale));
+    --h2: calc(var(--h3) * var(--scale));
+    --h3: calc(var(--h4) * var(--scale));
+    --h4: calc(var(--h5) * var(--scale));
+    --h5: calc(var(--h6) * var(--scale));
+    --h6: var(--base-size);
+    --small: calc(var(--base-size) / var(--scale));
+
+    /* Theme radius */
+    --radius: 5px;
+}
+
 body {
     background-image: url("jose-francisco-morales-hKzmPs8Axh8-unsplash.jpg");
     /* background-position: center; */
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;
+    font-family: var(--roboto);
     padding: 0;
     margin: 0;
 }
@@ -13,14 +46,55 @@ header {
 }
 
 header h1 {
+    /* font-family: var(--heebo); */
+    margin-left: 1rem;
+    font-variant: small-caps;
+    font-size: var(--h1);
+}
+
+table {
     margin-left: 1rem;
 }
 
-table,
+.textBlob {
+    background-color: var(--infieldT);
+    margin-left: 1rem;
+    line-height: 1.3;
+    padding: 0 1rem;
+    border: 2px solid var(--pinstripe);
+    margin-right: 1rem;
+}
+
+#teamManagementTable {
+    border: 2px solid var(--pinstripe);
+    border-radius: var(--radius);
+    background-color: var(--infieldT);
+    border-collapse: collapse;
+    width: 95%;
+}
+
+#inactiveTable {
+    border: 2px solid var(--pinstripe);
+    border-radius: var(--radius);
+    background-color: var(--stitchT);
+    border-collapse: collapse;
+    width: 95%;
+    margin-bottom: 2rem;
+}
+
+#contentRow1,
+#contentRow2 {
+    display: grid;
+    grid-template-columns: 6fr 4fr;
+}
+
 th,
 td {
-    border: 1px solid black;
+    border: 1px solid var(--pinstripe);
     border-collapse: collapse;
+    border-radius: var(--radius);
+    font-size: var(--h6);
+    padding: 5px;
 }
 
 th {
@@ -29,14 +103,27 @@ th {
     padding-right: 5px;
 }
 
-.playerName {
-    padding-left: 5px;
-    padding-right: 5px;
-}
-
 #editModal,
 #addModal {
     display: none;
+}
+
+button {
+    text-transform: uppercase;
+    border-radius: var(--radius);
+    font-family: var(--roboto);
+    padding: 5px;
+}
+
+.inactiveBtn {
+    background-color: var(--pinstripe);
+    color: var(--infield);
+}
+
+select {
+    text-align: center;
+    font-family: var(--roboto);
+    font-size: medium;
 }
 
 .modal {
@@ -99,12 +186,15 @@ th {
     color: red;
 }
 
-.textBlob {
-    margin-left: 1rem;
+.pos1Select {
+    background-color: var(--grass);
+    border-radius: var(--radius);
 }
 
-.pos1Select {
-    background-color: aqua;
+.pos2Select,
+.pos3Select {
+    background-color: var(--ball);
+    border-radius: var(--radius);
 }
 
 select {
@@ -113,8 +203,18 @@ select {
 
 footer {
     border-top: 6px solid black;
+    margin-bottom: 3rem;
 }
 
 footer p {
     margin-left: 1rem;
+}
+
+a,
+a:visited {
+    color: var(--pinstripe);
+}
+
+a:hover {
+    text-decoration: none;
 }

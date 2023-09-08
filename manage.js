@@ -102,7 +102,7 @@ generateLineupBtn.addEventListener('click', function () {
 
 //-----------Populate Team Management Table----START----//
 const populateManagementTable = function (mRoster, battingOrder) {
-    let managementTable = "<table>";
+    let managementTable = `<table id="teamManagementTable">`;
     console.log('mRoster: ', mRoster)
     console.log('battingOrder: ', battingOrder)
 
@@ -125,7 +125,7 @@ const populateManagementTable = function (mRoster, battingOrder) {
         managementTable += "<td class='centerTD' id='pos2SelectCell" + player.alias + "'></td>"; // 2nd position select
         managementTable += "<td class='centerTD' id='pos3SelectCell" + player.alias + "'></td>"; // 3rd position select
         managementTable += "<td class='centerTD'><span id='editBtn" + player.alias + "' class='editBtn'>📝</span></td>"; // Edit player button
-        managementTable += "<td class='centerTD'><input id='activeBox" + player.alias + "' type='checkbox' checked='true'>"
+        managementTable += "<td class='centerTD checkCell'><button class='inactiveBtn' id='activeBox" + player.alias + "'>Inactive</button>"
         managementTable += "</tr>"; // end row
         counter++;
     }
@@ -191,7 +191,7 @@ function addEditListeners() { // Edit button click listeners
 
 function addInactiveListeners() { // Active checkbox click listeners
     for (let p of rc) {
-        document.getElementById('activeBox' + p.alias).addEventListener('input', function () {
+        document.getElementById('activeBox' + p.alias).addEventListener('click', function () {
             markInactive(p, sc);
         })
     }
@@ -432,7 +432,7 @@ function deletePlayer(player) {
 function populateInactiveTable(rci) {
     inactiveTBody.innerHTML = "";
     for (let player of rci) {
-        inactiveTBody.innerHTML += "<tr><td>" + (player.lName.toUpperCase()) + ", " + player.fName + "</td><td class='centerTD'><button id='activeButton" + player.alias + "'>Activate</button></td></tr>"
+        inactiveTBody.innerHTML += "<tr><td>" + (player.lName.toUpperCase()) + ", " + player.fName + "</td><td class='centerTD'><button id='activeButton" + player.alias + "'>Active</button></td></tr>"
     }
 
     for (let p of rci) {
