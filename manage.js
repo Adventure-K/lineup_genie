@@ -13,6 +13,9 @@ window.sc = sc;
 window.bo = bo;
 window.rci = rci;
 
+/* *** IMPORTANT:   If secondary player positions are implemented, uncomment all lines / blocks with *2* in this file 
+                    If tertiary player positions are implemented, uncomment all lines / blocks with *3* in this file *** */ 
+
 //----------Global Variables & Event Listeners---------------//
 const closeEditBtn = document.getElementsByClassName('close')[0];
 const closeAddBtn = document.getElementsByClassName('close')[1];
@@ -59,39 +62,38 @@ closeAddBtn.addEventListener('click', function () {
 generateLineupBtn.addEventListener('click', function () {
     const order = bo;
     const pos1Choices = document.getElementsByClassName('pos1Select');
-    const pos2Choices = document.getElementsByClassName('pos2Select');
-    const pos3Choices = document.getElementsByClassName('pos3Select');
+    // const pos2Choices = document.getElementsByClassName('pos2Select'); // *2*
+    // const pos3Choices = document.getElementsByClassName('pos3Select'); // *3*
     const pos1Data = {};
-    const pos2Data = {};
-    const pos3Data = {};
+    // const pos2Data = {}; // *2*
+    // const pos3Data = {}; // *3*
     for (let i = 0; i < pos1Choices.length; i++) { // Create object of current pos 1 selections for all participants
         let alias = order[i];
         let pos = pos1Choices[i].value;
         pos1Data[alias] = pos;
     }
-
-    for (let i = 0; i < pos2Choices.length; i++) { // Create object of current pos 2 selections for all participants
+    /* for (let i = 0; i < pos2Choices.length; i++) { // Create object of current pos 2 selections for all participants
         let alias = order[i];
         let pos2 = pos2Choices[i].value;
         pos2Data[alias] = pos2;
-    }
-    for (let i = 0; i < pos3Choices.length; i++) { // Create object of current pos 3 selections for all participants
+    } */ // *2*
+    /* for (let i = 0; i < pos3Choices.length; i++) { // Create object of current pos 3 selections for all participants
         let alias = order[i];
         let pos3 = pos3Choices[i].value;
         pos3Data[alias] = pos3;
-    }
+    } */ // *3*
     for (let i = 0; i < rc.length; i++) { // Update main roster object with new position selections
         const player = rc[i];
         const alias = player.alias;
         if (pos1Data.hasOwnProperty(alias)) {
             player.pos = pos1Data[alias]
         }
-        if (pos2Data.hasOwnProperty(alias)) {
+        /* if (pos2Data.hasOwnProperty(alias)) {
             player.pos2 = pos2Data[alias]
-        }
-        if (pos3Data.hasOwnProperty(alias)) {
+        } */ // *2*
+        /* if (pos3Data.hasOwnProperty(alias)) {
             player.pos3 = pos3Data[alias]
-        }
+        } */ // *3*
     }
     localStorage.setItem('roster', JSON.stringify(rc));     // POST new pos selections to localStorage roster
     window.location.href = "SLM_v2.html"                    // Push user to generator page
@@ -107,7 +109,10 @@ const populateManagementTable = function (mRoster, battingOrder) {
     console.log('battingOrder: ', battingOrder)
 
     // Headers
-    managementTable += "<tr><th>Reorder</th><th>Batting Order</th><th>Main Position</th><th>2nd Position</th><th>3rd Position</th><th>Edit</th><th>Active</th></tr>";
+    managementTable += "<tr><th>Reorder</th><th>Batting Order</th><th>Primary Position</th>";
+    // managementTable += "<th>2nd Position</th>"; // *2*
+    // managementTable += "<th>3rd Position</th>"; // *3*
+    managementTable += "<th>Edit</th><th>Active</th></tr>";
 
     // Data
     let counter = 0;
@@ -122,8 +127,8 @@ const populateManagementTable = function (mRoster, battingOrder) {
         }
         managementTable += "<td class='playerName'>" + (player.lName.toUpperCase()) + ", " + player.fName + "</td>"; // Player name
         managementTable += "<td class='centerTD' id='pos1SelectCell" + player.alias + "'></td>"; // Main position select
-        managementTable += "<td class='centerTD' id='pos2SelectCell" + player.alias + "'></td>"; // 2nd position select
-        managementTable += "<td class='centerTD' id='pos3SelectCell" + player.alias + "'></td>"; // 3rd position select
+        // managementTable += "<td class='centerTD' id='pos2SelectCell" + player.alias + "'></td>"; // 2nd position select // *2*
+        // managementTable += "<td class='centerTD' id='pos3SelectCell" + player.alias + "'></td>"; // 3rd position select // *3*
         managementTable += "<td class='centerTD'><span id='editBtn" + player.alias + "' class='editBtn'>📝</span></td>"; // Edit player button
         managementTable += "<td class='centerTD checkCell'><button class='inactiveBtn' id='activeBox" + player.alias + "'>Inactive</button>"
         managementTable += "</tr>"; // end row
@@ -217,24 +222,25 @@ function addReorderListeners() { // Reorder button click listeners
 const addPositionSelectors = function () {
     let counter = 0; // Used to generate unique element IDs
     for (let p of rc) { // Loop of Players (Table rows)
-        const pos1Select = document.createElement('select');    // Generate dropdowns
+        const pos1Select = document.createElement('select');    // Generate position dropdowns
         pos1Select.id = 'pos1Select_' + counter;                // Give unique ID
-        pos1Select.className = 'pos1Select'                     // Give all pos 1 selectors the same class
-        const pos2Select = document.createElement('select');
+        pos1Select.className = 'pos1Select';                    // Give all pos 1 selectors the same class
+
+        /* const pos2Select = document.createElement('select'); 
         pos2Select.id = 'pos2Select_' + counter;
         pos2Select.className = 'pos2Select'
-        const pos3Select = document.createElement('select');
-        pos3Select.id = 'pos3Select_' + counter;
-        pos3Select.className = 'pos3Select'
-
         const pos2Null = document.createElement('option');      // Create blank options for pos 2 and 3
         pos2Null.value = '';
         pos2Null.textContent = '- none -';
-        pos2Select.appendChild(pos2Null);
+        pos2Select.appendChild(pos2Null); */ // *2*      
+
+        /* const pos3Select = document.createElement('select');
+        pos3Select.id = 'pos3Select_' + counter;
+        pos3Select.className = 'pos3Select'
         const pos3Null = document.createElement('option');
         pos3Null.value = '';
         pos3Null.textContent = '- none -';
-        pos3Select.appendChild(pos3Null);
+        pos3Select.appendChild(pos3Null); */ // *3*
 
         for (let key in roles) { // Loop of Roles
             if (roles.hasOwnProperty(key)) {                    // Populate dropdowns with keys of "roles" object
@@ -243,29 +249,29 @@ const addPositionSelectors = function () {
                 pos1Option.textContent = key;
                 pos1Select.appendChild(pos1Option);
 
-                const pos2Option = document.createElement('option');
+                /* const pos2Option = document.createElement('option');
                 pos2Option.value = key;
                 pos2Option.textContent = key;
-                pos2Select.appendChild(pos2Option);
+                pos2Select.appendChild(pos2Option); */ // *2*
 
-                const pos3Option = document.createElement('option');
+                /* const pos3Option = document.createElement('option');
                 pos3Option.value = key;
                 pos3Option.textContent = key;
-                pos3Select.appendChild(pos3Option);
+                pos3Select.appendChild(pos3Option); */ // *3*
             }
         }
 
         const targetElement1 = document.getElementById("pos1SelectCell" + p.alias); // Insert dropdowns into correct cells. Dropdown and cell ID# should correspond
         targetElement1.appendChild(pos1Select);                                     // Ergo line up correctly regardless of batting order
-        const targetElement2 = document.getElementById("pos2SelectCell" + p.alias);
-        targetElement2.appendChild(pos2Select);
-        const targetElement3 = document.getElementById("pos3SelectCell" + p.alias);
-        targetElement3.appendChild(pos3Select);
+        // const targetElement2 = document.getElementById("pos2SelectCell" + p.alias); // *2*
+        // targetElement2.appendChild(pos2Select); // *2*
+        // const targetElement3 = document.getElementById("pos3SelectCell" + p.alias); // *3*
+        // targetElement3.appendChild(pos3Select); // *3*
 
         for (let key in roles) {                                // Set correct default selections according to roster object
             if (key === p.pos) pos1Select.value = p.pos;
-            if (key === p.pos2) pos2Select.value = p.pos2;
-            if (key === p.pos3) pos3Select.value = p.pos3;
+            // if (key === p.pos2) pos2Select.value = p.pos2; // *2*
+            // if (key === p.pos3) pos3Select.value = p.pos3; // *3*
         }
         counter++;
     }
@@ -491,12 +497,12 @@ function addPlayer() {
     const addPos1 = document.createElement('select');    // Generate position selection dropdowns
     addPos1.id = 'addPos1';
     addPos1.className = 'addPos';
-    const addPos2 = document.createElement('select');
+    /* const addPos2 = document.createElement('select');
     addPos2.id = 'addPos2';
-    addPos2.className = 'addPos';
-    const addPos3 = document.createElement('select');
+    addPos2.className = 'addPos'; */ // *2*
+    /* const addPos3 = document.createElement('select');
     addPos3.id = 'addPos3';
-    addPos3.className = 'addPos';
+    addPos3.className = 'addPos'; */ // *3*
 
     for (let key in roles) {
         if (roles.hasOwnProperty(key)) {                    // Populate dropdowns with keys of "roles" object
@@ -505,51 +511,51 @@ function addPlayer() {
             pos1Option.textContent = key;
             addPos1.appendChild(pos1Option);
 
-            const pos2Option = document.createElement('option');
+            /* const pos2Option = document.createElement('option');
             pos2Option.value = key;
             pos2Option.textContent = key;
-            addPos2.appendChild(pos2Option);
+            addPos2.appendChild(pos2Option); */ // *2*
 
-            const pos3Option = document.createElement('option');
+            /* const pos3Option = document.createElement('option');
             pos3Option.value = key;
             pos3Option.textContent = key;
-            addPos3.appendChild(pos3Option);
+            addPos3.appendChild(pos3Option); */ // *3*
         }
     }
 
-    const pos2Null = document.createElement('option');      // Create blank options for pos 2 and 3
+    /* const pos2Null = document.createElement('option');      // Create blank options for pos 2 and 3
     pos2Null.value = '';
     pos2Null.textContent = '- none -';
-    addPos2.appendChild(pos2Null);
-    const pos3Null = document.createElement('option');
+    addPos2.appendChild(pos2Null); */ // *2*
+    /* const pos3Null = document.createElement('option');
     pos3Null.value = '';
     pos3Null.textContent = '- none -';
-    addPos3.appendChild(pos3Null);
+    addPos3.appendChild(pos3Null); */ // *3*
 
     addPosDiv.appendChild(addPos1);                         // Draw dropdowns
-    addPosDiv.appendChild(addPos2);
-    addPosDiv.appendChild(addPos3);
+    // addPosDiv.appendChild(addPos2); // *2*
+    // addPosDiv.appendChild(addPos3); // *3*
     addPos1.value = '';                                     // Some default values
-    addPos2.value = '';
-    addPos3.value = '';
+    // addPos2.value = ''; // *2*
+    // addPos3.value = ''; // *3*
 
     // Put pos choices in one obj to props to save fn
     const newPlayerPos = {
         'pos': '',
-        'pos2': '',
-        'pos3': ''
+        // 'pos2': '', // *2*
+        // 'pos3': ''  // *3*
     }
 
     // Input listeners to update pos object. 
     addPos1.addEventListener('input', function () {
         newPlayerPos['pos'] = addPos1.value;
     })
-    addPos2.addEventListener('input', function () {
+    /* addPos2.addEventListener('input', function () {
         newPlayerPos['pos2'] = addPos2.value;
-    })
-    addPos3.addEventListener('input', function () {
+    }) */ // *2*
+    /* addPos3.addEventListener('input', function () {
         newPlayerPos['pos3'] = addPos3.value;
-    })
+    }) */ // *3*
 
     const newSkillObj = { 'P': 50, 'C': 50, '1B': 50, '2B': 50, '3B': 50, 'SS': 50, 'LF': 50, 'LCF': 50, 'RCF': 50, 'RF': 50 }
 
@@ -640,8 +646,8 @@ function saveNewPlayer(posObj, skillObj) {
     playerObj['pos'] = posObj['pos'];
     playerObj['fName'] = addFName.value;
     playerObj['lName'] = addLName.value;
-    playerObj['pos2'] = posObj['pos2'];
-    playerObj['pos3'] = posObj['pos3'];
+    // playerObj['pos2'] = posObj['pos2']; // *2*
+    // playerObj['pos3'] = posObj['pos3']; // *3*
     playerObj['sortOrderClass'] = '1';                          // Secret Lanser esoterica
 
     console.log('playerObj: ', playerObj)
