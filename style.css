@@ -5,10 +5,10 @@
 
     /* Colors */
     --infield: #efd2b2;
-    --infieldT: rgba(239, 210, 178, 0.8);
+    --infieldT: rgba(239, 210, 178, 0.7);
     --grass: #99a962;
     --stitch: #f36a70;
-    --stitchT: rgba(236, 106, 112, 0.8);
+    --stitchT: rgba(236, 106, 112, 0.6);
     --ball: #fbfbf9;
     --ballT: rgba(251, 251, 249, 0.8);
     --pinstripe: #253966;
@@ -32,7 +32,6 @@
 
 body {
     background-image: url("jose-francisco-morales-hKzmPs8Axh8-unsplash.jpg");
-    /* background-position: center; */
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;
@@ -40,65 +39,69 @@ body {
     padding: 0;
     margin: 0;
 }
+a,
+a:visited {
+    color: var(--pinstripe);
+}
+a:hover {
+    text-decoration: none;
+}
 
+/* ------universal table styling------ */
+th,
+td {
+    border: 1px solid var(--pinstripe);
+    border-collapse: collapse;
+    border-radius: var(--radius);
+    font-size: var(--h6);
+}
+th {
+    font-weight: bold;
+    padding: 5px;
+}
+td {
+    padding: 2px 5px;
+}
+.centerTD {
+    text-align: center;
+}
+
+/* ------universal button------ */
+button {
+    text-transform: uppercase;
+    border-radius: var(--radius);
+    font-family: var(--roboto);
+    padding: 7px;
+}
+
+/* ------universal dropdown------ */
+select {
+    text-align: center;
+    font-family: var(--roboto);
+    font-size: medium;
+    width: 100%;
+}
+
+/* ------HEADER------ */
 header {
     border-bottom: 20px double black;
 }
-
 header h1 {
-    /* font-family: var(--heebo); */
     margin-left: 1rem;
     font-variant: small-caps;
     font-size: var(--h1);
 }
 
-.textBlob {
-    background-color: var(--infieldT);
-    margin-left: 1rem;
-    line-height: 1.3;
-    padding: 0 1rem;
-    border: 2px solid var(--pinstripe);
-    margin-right: 1rem;
+/* ------FOOTER------ */
+footer {
+    border-top: 6px solid black;
+    margin-bottom: 3rem;
 }
-
-#defaultData {
-    grid-column: 3/4;
-    justify-self: end;
-    margin-left: 1rem;
-    margin-right: 1rem;
-    background-color: var(--pinstripe);
-    color: var(--ball);
-}
-
-#teamManagementTable {
-    border: 2px solid var(--pinstripe);
-    border-radius: var(--radius);
-    background-color: var(--infieldT);
-    border-collapse: collapse;
-    max-width: 96%;
+footer p {
     margin-left: 1rem;
 }
 
-#noDataError {
-    border: 2px solid var(--pinstripe);
-    background-color: var(--infieldT);
-    text-align: center;
-    padding: 10px;
-    width: 50%;
-    margin: 25% 0 0 25%;
-
-}
-
-#inactiveTable {
-    border: 2px solid var(--pinstripe);
-    border-radius: var(--radius);
-    background-color: var(--stitchT);
-    border-collapse: collapse;
-    max-width: 97%;
-    margin-bottom: 2rem;
-    margin-left: 1rem;
-}
-
+/* ------MAIN VIEW ZONES------ */
 #contentRow1,
 #contentRow2 {
     display: grid;
@@ -110,57 +113,171 @@ header h1 {
     grid-template-columns: 1fr 1fr;
     margin-bottom: 1rem;
 }
+#manageInactiveDiv {
+    display: none;
+}
 
+/* ------CONSTRAINTS BLURB------ */
+.textBlob {
+    background-color: var(--infieldT);
+    margin-left: 1rem;
+    line-height: 1.3;
+    padding: 0 1rem;
+    border: 2px solid var(--pinstripe);
+    margin-right: 1rem;
+}
+.bold {
+    font-weight: bolder;
+}
+
+/* ------MAIN TABLE------ */
+#teamManagementTable {
+    border: 2px solid var(--pinstripe);
+    border-radius: var(--radius);
+    background-color: var(--infieldT);
+    border-collapse: collapse;
+    max-width: 96%;
+    margin-left: 1rem;
+}
+.editBtn {
+    cursor: pointer;
+}
+.inactiveBtn {
+    background-color: var(--ball);
+    color: var(--stitch);
+    padding: 3px;
+}
+.up,
+.down {
+    cursor: pointer;
+}
+.pos1Select {
+    background-color: var(--grass);
+    border-radius: var(--radius);
+}
+#noDataError {
+    border: 2px solid var(--pinstripe);
+    background-color: var(--infieldT);
+    text-align: center;
+    padding: 10px;
+    width: 50%;
+    margin: 25% 0 0 25%;
+}
+/* (not in use) */
+.pos2Select,
+.pos3Select {
+    background-color: var(--ball);
+    border-radius: var(--radius);
+}
+
+/* ------INACTIVE TABLE------ */
+#inactiveTable {
+    border: 2px solid var(--pinstripe);
+    border-radius: var(--radius);
+    background-color: var(--stitchT);
+    border-collapse: collapse;
+    max-width: 97%;
+    margin-bottom: 2rem;
+    margin-left: 1rem;
+}
+.activeBtn {
+    background-color: var(--ball);
+    padding: 3px;
+}
+
+/* ------MAIN VIEW BUTTONS------ */
 #addPlayerBtn {
     margin-left: 1rem;
     justify-self: start;
     background-color: var(--pinstripe);
     color: var(--ball);
 }
+#defaultData {
+    grid-column: 3/4;
+    justify-self: end;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    background-color: var(--pinstripe);
+    color: var(--ball);
+}
+#generateLineupBtn {
+    margin-left: 1rem;
+    justify-self: start;
+    background-color: var(--pinstripe);
+    color: var(--ball);
+}
+#errorDialog {
+    display: none;
+    margin-left: 1rem;
+    padding: 5px;
+    color: red;
+    font-weight: bolder;
+    border: 1px solid red;
+}
+#generateLineupBtn:disabled {
+    color: lightgrey;
+    background-color: darkgrey;
+}
 
+ /* ------MODALS------ */
+ .modal {
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+.modal h2 {
+    font-size: var(--h2);
+    font-variant: small-caps;
+    margin-top: 0.7rem;
+}
+ .modal-content {
+    background-color: var(--infield);
+    border: 6px solid black;
+    margin: 5% auto;
+    padding: 20px;
+    width: 40%;
+    max-width: 600px;
+    max-height: 90%;
+}
+.modal-content * {
+    line-height: 1.5rem;
+}
 .modalButton {
     background-color: var(--pinstripe);
     color: var(--ball);
 }
-
-
-th,
-td {
-    border: 1px solid var(--pinstripe);
-    border-collapse: collapse;
-    border-radius: var(--radius);
-    font-size: var(--h6);
-}
-
-th {
+.close {
+    color: #000;
+    float: right;
+    font-size: var(--h1);
     font-weight: bold;
-    padding: 5px;
+    cursor: pointer;
 }
-
-td {
-    padding: 2px 5px;
-}
-
 #editModal,
 #addModal {
     display: none;
 }
-
 #editSkills {
     line-height: 1.5rem;
     display: grid;
     grid-template-columns: 1fr 4fr 1fr;
     grid-template-rows: repeat(10, 1fr);
 }
-
-#editName {
+#editName,
+#addName {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr;
 }
-
 #editFName,
-#editLName {
+#editLName,
+#addFName,
+#addLName {
     max-width: 100%;
     text-align: right;
     grid-column: 2/3;
@@ -174,11 +291,9 @@ td {
     grid-row: 2/3;
     height: 1rem;
 }
-
 .skillSlider {
     grid-column: 2/3;
 }
-
 .curVal {
     max-width: 3rem;
     grid-column: 3/4;
@@ -186,165 +301,44 @@ td {
     text-align: right;
     height: 1rem;
 }
-
 .nameLabel {
     grid-column: 1/2;
 }
 .skillLabel {
     grid-column: 1/2;
 }
-
-button {
-    text-transform: uppercase;
-    border-radius: var(--radius);
-    font-family: var(--roboto);
-    /* font-size: var(--h6); */
-    padding: 7px;
-}
-
-.inactiveBtn {
-    background-color: var(--ball);
-    color: var(--stitch);
-    padding: 3px;
-}
-
-.activeBtn {
-    background-color: var(--ball);
-    padding: 3px;
-}
-
-select {
-    text-align: center;
-    font-family: var(--roboto);
-    font-size: medium;
-    width: 100%;
-    /* padding: 5px 0; */
-}
-
-.modal {
-    position: fixed;
-    z-index: 9999;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.4);
-}
-
-.modal h2 {
-    font-size: var(--h2);
-    font-variant: small-caps;
-    margin-top: 0.7rem;
-}
-
-.modal-content {
-    background-color: var(--infield);
-    border: 6px solid black;
-    margin: 5% auto;
-    padding: 20px;
-    width: 40%;
-    max-width: 600px;
-    max-height: 90%;
-}
-.modal-content * {
-    line-height: 1.5rem;
-
-}
-
-.close {
-    color: #000;
-    float: right;
-    font-size: var(--h1);
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.editBtn {
-    cursor: pointer;
-}
-
 #editSaveBtn,
 #deletePlayerBtn {
     margin-top: 1rem;
     padding: 3px 6px;
 }
-
 #editErrorText {
     margin-top: 1rem;
 }
-
-.centerTD {
-    text-align: center;
-}
-
-.up,
-.down {
+/* SLIDERS (only in modals) */
+input[type=range] {
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
     cursor: pointer;
+    width: 100%;
 }
-
+input[type=range]::-webkit-slider-runnable-track,
+input[type=range]::-moz-range-track {
+    background: var(--pinstripe);
+    height: 0.5rem;
+    border-radius: var(--radius);
+}
+input[type=range]::-webkit-slider-thumb,
+input[type=range]::-moz-range-thumb {
+    margin-top: -0.25rem;
+    height: 1rem;
+    width: 1rem;
+    background: var(--ball);
+}
 .input-error {
     border: 2px solid red;
 }
-
 .error-message {
     color: red;
-}
-
-#manageInactiveDiv {
-    display: none;
-}
-
-.bold {
-    font-weight: bolder;
-}
-
-#generateLineupBtn {
-    margin-left: 1rem;
-    justify-self: start;
-    background-color: var(--pinstripe);
-    color: var(--ball);
-}
-
-#generateLineupBtn:disabled {
-    color: lightgrey;
-    background-color: darkgrey;
-}
-
-#errorDialog {
-    display: none;
-    margin-left: 1rem;
-    padding: 5px;
-    color: maroon;
-    font-weight: bolder;
-    border: 1px solid maroon;
-}
-
-.pos1Select {
-    background-color: var(--grass);
-    border-radius: var(--radius);
-}
-
-.pos2Select,
-.pos3Select {
-    background-color: var(--ball);
-    border-radius: var(--radius);
-}
-
-footer {
-    border-top: 6px solid black;
-    margin-bottom: 3rem;
-}
-
-footer p {
-    margin-left: 1rem;
-}
-
-a,
-a:visited {
-    color: var(--pinstripe);
-}
-
-a:hover {
-    text-decoration: none;
 }
