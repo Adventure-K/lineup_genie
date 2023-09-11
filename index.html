@@ -19,8 +19,10 @@
     </header>
     <div id="datasetValidation"></div>
     <br>
-    <button id="addPlayerBtn">Add Player</button>
-    <button id="defaultData">Load Default Team Data</button>
+    <div id="buttonFieldTop">
+        <button id="addPlayerBtn">Add Player</button>
+        <button id="defaultData">Load Default Team Data</button>
+    </div>
     <div id="contentRow1">
         <div id="managePlayersDiv"></div>
         <div class="textBlob">
@@ -44,10 +46,10 @@
         </div>
     </div>
     <br>
-    <button id="generateLineupBtn">Generate Lineup</button>
-    <span id="errorDialog">
-
-    </span>
+    <div id="buttonFieldBottom">
+        <button id="generateLineupBtn">Generate Lineup</button>
+        <span id="errorDialog">Lineup error. Check constraints</span>
+    </div>
     <br><br>
     <div id="contentRow2">
         <div id="manageInactiveDiv">
@@ -69,12 +71,16 @@
             <span class="close">&times;</span>
             <h2>Edit Player</h2>
             <hr>
-            <input type="text" id="editFName">
-            <input type="text" id="editLName">
+            <div id="editName">
+                <label class="nameLabel" for="editFName">First Name</label>
+                <input type="text" id="editFName">
+                <label class="nameLabel" for="editLName">Last Name</label>
+                <input type="text" id="editLName">
+            </div>
             <div id="editSkills"></div>
-            <button id="editSaveBtn">Save</button>
+            <button id="editSaveBtn" class="modalButton">Save</button>
+            <button id="deletePlayerBtn" class="modalButton">Delete Player</button><br>
             <span id="editErrorText" class="error-message" style="display: none;"></span>
-            <button id="deletePlayerBtn">Delete Player</button>
         </div>
     </div>
 
@@ -88,7 +94,7 @@
             <div id="addPosDiv"></div>
             <div id="addSkills"></div>
             <div id="addSaveDiv"></div>
-            <button id="addSaveBtn">Save Player</button>
+            <button id="addSaveBtn" class="modalButton">Save Player</button>
             <span id="addErrorText" class="error-message" style="display: none;"></span>
         </div>
     </div>

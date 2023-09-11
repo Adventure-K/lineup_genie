@@ -52,10 +52,6 @@ header h1 {
     font-size: var(--h1);
 }
 
-table {
-    margin-left: 1rem;
-}
-
 .textBlob {
     background-color: var(--infieldT);
     margin-left: 1rem;
@@ -65,12 +61,32 @@ table {
     margin-right: 1rem;
 }
 
+#defaultData {
+    grid-column: 3/4;
+    justify-self: end;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    background-color: var(--pinstripe);
+    color: var(--ball);
+}
+
 #teamManagementTable {
     border: 2px solid var(--pinstripe);
     border-radius: var(--radius);
     background-color: var(--infieldT);
     border-collapse: collapse;
-    width: 95%;
+    max-width: 96%;
+    margin-left: 1rem;
+}
+
+#noDataError {
+    border: 2px solid var(--pinstripe);
+    background-color: var(--infieldT);
+    text-align: center;
+    padding: 10px;
+    width: 50%;
+    margin: 25% 0 0 25%;
+
 }
 
 #inactiveTable {
@@ -78,8 +94,9 @@ table {
     border-radius: var(--radius);
     background-color: var(--stitchT);
     border-collapse: collapse;
-    width: 95%;
+    max-width: 97%;
     margin-bottom: 2rem;
+    margin-left: 1rem;
 }
 
 #contentRow1,
@@ -88,19 +105,40 @@ table {
     grid-template-columns: 6fr 4fr;
 }
 
+#buttonFieldTop {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin-bottom: 1rem;
+}
+
+#addPlayerBtn {
+    margin-left: 1rem;
+    justify-self: start;
+    background-color: var(--pinstripe);
+    color: var(--ball);
+}
+
+.modalButton {
+    background-color: var(--pinstripe);
+    color: var(--ball);
+}
+
+
 th,
 td {
     border: 1px solid var(--pinstripe);
     border-collapse: collapse;
     border-radius: var(--radius);
     font-size: var(--h6);
-    padding: 5px;
 }
 
 th {
     font-weight: bold;
-    padding-left: 5px;
-    padding-right: 5px;
+    padding: 5px;
+}
+
+td {
+    padding: 2px 5px;
 }
 
 #editModal,
@@ -108,22 +146,79 @@ th {
     display: none;
 }
 
+#editSkills {
+    line-height: 1.5rem;
+    display: grid;
+    grid-template-columns: 1fr 4fr 1fr;
+    grid-template-rows: repeat(10, 1fr);
+}
+
+#editName {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+}
+
+#editFName,
+#editLName {
+    max-width: 100%;
+    text-align: right;
+    grid-column: 2/3;
+    justify-self: end;
+}
+#editFName {
+    grid-row: 1/2;
+    height: 1rem;
+}
+#editLName {
+    grid-row: 2/3;
+    height: 1rem;
+}
+
+.skillSlider {
+    grid-column: 2/3;
+}
+
+.curVal {
+    max-width: 3rem;
+    grid-column: 3/4;
+    justify-self: end;
+    text-align: right;
+    height: 1rem;
+}
+
+.nameLabel {
+    grid-column: 1/2;
+}
+.skillLabel {
+    grid-column: 1/2;
+}
+
 button {
     text-transform: uppercase;
     border-radius: var(--radius);
     font-family: var(--roboto);
-    padding: 5px;
+    /* font-size: var(--h6); */
+    padding: 7px;
 }
 
 .inactiveBtn {
-    background-color: var(--pinstripe);
-    color: var(--infield);
+    background-color: var(--ball);
+    color: var(--stitch);
+    padding: 3px;
+}
+
+.activeBtn {
+    background-color: var(--ball);
+    padding: 3px;
 }
 
 select {
     text-align: center;
     font-family: var(--roboto);
     font-size: medium;
+    width: 100%;
+    /* padding: 5px 0; */
 }
 
 .modal {
@@ -137,24 +232,46 @@ select {
     background-color: rgba(0, 0, 0, 0.4);
 }
 
+.modal h2 {
+    font-size: var(--h2);
+    font-variant: small-caps;
+    margin-top: 0.7rem;
+}
+
 .modal-content {
-    background-color: #fff;
-    margin: 15% auto;
+    background-color: var(--infield);
+    border: 6px solid black;
+    margin: 5% auto;
     padding: 20px;
-    width: 60%;
+    width: 40%;
     max-width: 600px;
+    max-height: 90%;
+}
+.modal-content * {
+    line-height: 1.5rem;
+
 }
 
 .close {
-    color: #aaa;
+    color: #000;
     float: right;
-    font-size: 28px;
+    font-size: var(--h1);
     font-weight: bold;
     cursor: pointer;
 }
 
 .editBtn {
     cursor: pointer;
+}
+
+#editSaveBtn,
+#deletePlayerBtn {
+    margin-top: 1rem;
+    padding: 3px 6px;
+}
+
+#editErrorText {
+    margin-top: 1rem;
 }
 
 .centerTD {
@@ -182,8 +299,25 @@ select {
     font-weight: bolder;
 }
 
+#generateLineupBtn {
+    margin-left: 1rem;
+    justify-self: start;
+    background-color: var(--pinstripe);
+    color: var(--ball);
+}
+
+#generateLineupBtn:disabled {
+    color: lightgrey;
+    background-color: darkgrey;
+}
+
 #errorDialog {
-    color: red;
+    display: none;
+    margin-left: 1rem;
+    padding: 5px;
+    color: maroon;
+    font-weight: bolder;
+    border: 1px solid maroon;
 }
 
 .pos1Select {
@@ -195,10 +329,6 @@ select {
 .pos3Select {
     background-color: var(--ball);
     border-radius: var(--radius);
-}
-
-select {
-    width: 100px;
 }
 
 footer {
