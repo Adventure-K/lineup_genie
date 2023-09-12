@@ -240,8 +240,8 @@ footer p {
     border: 6px solid black;
     margin: 5% auto;
     padding: 20px;
-    width: 40%;
-    max-width: 600px;
+    width: 25%;
+    max-width: 500px;
     max-height: 90%;
 }
 .modal-content * {
@@ -266,7 +266,7 @@ footer p {
 #addSkills {
     line-height: 1.5rem;
     display: grid;
-    grid-template-columns: 1fr 4fr 1fr;
+    grid-template-columns: 1fr 4fr 1fr 1fr;
     grid-template-rows: repeat(10, 1fr);
 }
 #editName,
@@ -325,7 +325,7 @@ footer p {
 }
 .curVal {
     max-width: 3rem;
-    grid-column: 3/4;
+    grid-column: 4/5;
     justify-self: end;
     text-align: right;
     height: 1rem;
