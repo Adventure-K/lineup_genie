@@ -560,9 +560,9 @@ function addPlayer() {
     const newSkillObj = { 'P': 50, 'C': 50, '1B': 50, '2B': 50, '3B': 50, 'SS': 50, 'LF': 50, 'LCF': 50, 'RCF': 50, 'RF': 50 }
 
     for (let [key, value] of Object.entries(newSkillObj)) { // Add skill sliders
-        addSkills.innerHTML += '<span>' + key + '</span>' // Slider label
+        addSkills.innerHTML += '<span class="skillLabel">' + key + '</span>' // Slider label
         addSkills.innerHTML += '<input class="skillSlider" id="' + key + '" type="range" min="1" max="100" value="' + value + '">' // Slider
-        addSkills.innerHTML += '<input type="number" class="curVal" min="1" max="100" value=' + value + '><br>' // Current value display (editable)
+        addSkills.innerHTML += '<input type="number" class="curVal" min="1" max="100" value=' + value + '>' // Current value display (editable)
     }
 
     // Auto-update values on user input
@@ -593,7 +593,7 @@ function addPlayer() {
 
     addSaveBtn.addEventListener('click', function () {
         saveNewPlayer(newPlayerPos, newSkillObj);
-    }, { once: true })
+    })
 
     addPlayerModal.style.display = 'block'
 }

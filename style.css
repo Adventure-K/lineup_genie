@@ -262,7 +262,8 @@ footer p {
 #addModal {
     display: none;
 }
-#editSkills {
+#editSkills,
+#addSkills {
     line-height: 1.5rem;
     display: grid;
     grid-template-columns: 1fr 4fr 1fr;
@@ -283,13 +284,41 @@ footer p {
     grid-column: 2/3;
     justify-self: end;
 }
-#editFName {
+#editFName,
+#addFName {
     grid-row: 1/2;
     height: 1rem;
 }
-#editLName {
+#editLName,
+#addLName {
     grid-row: 2/3;
     height: 1rem;
+}
+#addPosDiv {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin: 1rem 0;
+    height: 1.5rem;
+}
+#addPos1 {
+    width: 4rem;
+    max-width: 100%;
+    grid-column: 2/3;
+    background-color: var(--grass);
+    justify-self: end;
+}
+#addSaveDiv {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    margin: 1rem 0;
+}
+#addSaveBtn {
+    justify-self: start;
+}
+#addErrorText {
+    grid-column: 2/3;
+    justify-self: end;
+    align-self: end;
 }
 .skillSlider {
     grid-column: 2/3;
