@@ -109,7 +109,7 @@ const populateManagementTable = function (mRoster, battingOrder) {
     console.log('battingOrder: ', battingOrder)
 
     // Headers
-    managementTable += "<tr><th>Reorder</th><th>Batting Order</th><th>Primary Position</th>";
+    managementTable += "<tr><th>Reorder</th><th>Batting Order</th><th>Main Pos</th>";
     // managementTable += "<th>2nd Position</th>"; // *2*
     // managementTable += "<th>3rd Position</th>"; // *3*
     managementTable += "<th>Edit</th><th>Active</th></tr>";
@@ -140,7 +140,7 @@ const populateManagementTable = function (mRoster, battingOrder) {
 
 function positionErrorCheck() { // Make sure user selection of positions is compatible with generator
     generateLineupBtn.removeAttribute('disabled');
-    errorDialog.innerHTML = '';
+    errorDialog.style.display = 'none';
     const pl = [];
     for (let p = 0; p < bo.length; p++) {
         pl.push(document.getElementsByClassName('pos1Select')[p].value);    // Array of all selected positions
@@ -172,7 +172,7 @@ function positionErrorCheck() { // Make sure user selection of positions is comp
         (pl.length > 12 && countPos(pl, 'Util') > 4) ||     // At most 4 Util 
         (countPos(pl, 'Util') === 0 && countPos(pl, 'C') === 0) // Must have at least 1 C or at least 1 Util
     ) {     
-        errorDialog.innerHTML = 'Lineup error. Check constraints';
+        errorDialog.style.display = 'inline';
         generateLineupBtn.setAttribute('disabled', true)
     }
 }
@@ -292,9 +292,9 @@ const editPlayer = function (player) {
     const thisPlayerSkills = sc[player.alias];
     console.log('current player\'s skills: ', thisPlayerSkills)
     for (let [key, value] of Object.entries(thisPlayerSkills)) {
-        skillsDiv.innerHTML += '<span>' + key + '</span>' // Slider label
+        skillsDiv.innerHTML += '<span class="skillLabel">' + key + '</span>' // Slider label
         skillsDiv.innerHTML += '<input class="skillSlider" id="' + key + '" type="range" min="1" max="100" value="' + value + '">'
-        skillsDiv.innerHTML += '<input type="number" class="curVal" min="1" max="100" value=' + value + '><br>' // Current value display (editable)
+        skillsDiv.innerHTML += '<input type="number" class="curVal" min="1" max="100" value=' + value + '>' // Current value display (editable)
     }
 
     // Auto-update values on user input
@@ -333,7 +333,7 @@ const editPlayer = function (player) {
         }
     }
 
-    editSaveBtn.addEventListener('click', handleSaveClick, { once: true })
+    editSaveBtn.addEventListener('click', handleSaveClick)
     deletePlayerBtn.addEventListener('click', handleDeleteClick, { once: true });
 }
 
@@ -344,7 +344,7 @@ function saveEdit(player, thisPlayerSkills, oldFName, oldLName) {
         // INPUT VALIDATION
         if (!editFName.value || !editLName.value) {    // Require first & last name
             editErrorText.textContent = "Please enter a first and last name.";
-            editErrorText.style.display = "inline";
+            editErrorText.style.display = "block";
             return;
         } else {
             editErrorText.textContent = "";
@@ -438,7 +438,7 @@ function deletePlayer(player) {
 function populateInactiveTable(rci) {
     inactiveTBody.innerHTML = "";
     for (let player of rci) {
-        inactiveTBody.innerHTML += "<tr><td>" + (player.lName.toUpperCase()) + ", " + player.fName + "</td><td class='centerTD'><button id='activeButton" + player.alias + "'>Active</button></td></tr>"
+        inactiveTBody.innerHTML += "<tr><td>" + (player.lName.toUpperCase()) + ", " + player.fName + "</td><td class='centerTD'><button class='activeBtn' id='activeButton" + player.alias + "'>Active</button></td></tr>"
     }
 
     for (let p of rci) {
@@ -560,9 +560,9 @@ function addPlayer() {
     const newSkillObj = { 'P': 50, 'C': 50, '1B': 50, '2B': 50, '3B': 50, 'SS': 50, 'LF': 50, 'LCF': 50, 'RCF': 50, 'RF': 50 }
 
     for (let [key, value] of Object.entries(newSkillObj)) { // Add skill sliders
-        addSkills.innerHTML += '<span>' + key + '</span>' // Slider label
+        addSkills.innerHTML += '<span class="skillLabel">' + key + '</span>' // Slider label
         addSkills.innerHTML += '<input class="skillSlider" id="' + key + '" type="range" min="1" max="100" value="' + value + '">' // Slider
-        addSkills.innerHTML += '<input type="number" class="curVal" min="1" max="100" value=' + value + '><br>' // Current value display (editable)
+        addSkills.innerHTML += '<input type="number" class="curVal" min="1" max="100" value=' + value + '>' // Current value display (editable)
     }
 
     // Auto-update values on user input
@@ -593,7 +593,7 @@ function addPlayer() {
 
     addSaveBtn.addEventListener('click', function () {
         saveNewPlayer(newPlayerPos, newSkillObj);
-    }, { once: true })
+    })
 
     addPlayerModal.style.display = 'block'
 }
@@ -631,8 +631,8 @@ function saveNewPlayer(posObj, skillObj) {
         }
     })
 
-    if (posObj['pos'] === '') {  // Require primary position
-        addErrorText.textContent = "Please select a primary position.";
+    if (posObj['pos'] === '') {  // Require main position
+        addErrorText.textContent = "Please select a main position.";
         addErrorText.style.display = "inline";
         return;
     } else {
@@ -676,7 +676,7 @@ const mgmtTableToHTML = function (divId, content) {
 };
 const loadTable = function () {
     if (rc === null) {
-        mgmtTableToHTML("managePlayersDiv", "*** No player data found.  Add Player or Load Default Team Data. ***");
+        mgmtTableToHTML("managePlayersDiv", "<p id='noDataError'>No player data found.<br><br>Add Player or Load Default Team Data.</p>");
     } else {
         let managementTableDOM = populateManagementTable(rc, bo);
         mgmtTableToHTML("managePlayersDiv", managementTableDOM);
